@@ -235,12 +235,19 @@ export default function EconomicCalendar() {
               {isLoading ? (
                 <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading events...</TableCell></TableRow>
               ) : events && events.length > 0 ? (
-                events.map((event) => (
+                events.map((event) => {
+                  const safeDate = event.eventTime ? new Date(event.eventTime) : null;
+                  const isValidDate = safeDate instanceof Date && !isNaN(safeDate.getTime());
+                  return (
                   <TableRow key={event.id} className="hover:bg-white/5 transition-colors group">
                     <TableCell className="font-mono text-sm whitespace-nowrap">
                       <div className="flex flex-col">
-                        <span className="font-semibold text-foreground">{safeFormatDate(event.eventTime, "HH:mm")}</span>
-                        <span className="text-xs text-muted-foreground">{safeFormatDate(event.eventTime, "MMM d", "No date")}</span>
+                        <span className="font-semibold text-foreground">
+                          {isValidDate ? format(safeDate!, "HH:mm") : "--:--"}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {isValidDate ? format(safeDate!, "MMM d") : "No date"}
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell className="font-bold">{event.currency}</TableCell>
@@ -280,7 +287,8 @@ export default function EconomicCalendar() {
                     <TableCell className="text-right font-mono text-muted-foreground">{event.forecast || "-"}</TableCell>
                     <TableCell className="text-right font-mono text-muted-foreground">{event.previous || "-"}</TableCell>
                   </TableRow>
-                ))
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">

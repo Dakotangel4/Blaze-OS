@@ -1,0 +1,118 @@
+REPLIT PROMPT — LIVE PRICE TICKER BAR (BLAZEOS UPGRADE)
+📌 FEATURE TO IMPLEMENT
+
+Add a real-time market ticker bar at the very top of the Trading Hub dashboard that continuously displays live prices for:
+
+XAUUSD (Gold)
+NAS100 (NASDAQ 100)
+BTCUSD (Bitcoin)
+
+The ticker must behave like an institutional trading desk strip (Bloomberg-style).
+
+⚙️ FUNCTIONAL REQUIREMENTS
+1. Real-Time Data Source
+
+Use a public market data API (choose one and structure for easy swapping):
+
+Finnhub
+Alpha Vantage
+Twelve Data
+CoinGecko (for BTC)
+Any REST polling API fallback
+
+Polling interval:
+
+Every 5–10 seconds
+2. DATA FORMAT
+
+Each asset must show:
+
+Symbol
+Current Price
+Daily Change ($ and %)
+Direction indicator (↑ ↓)
+
+Example:
+
+XAUUSD  |  2334.12  |  +12.4 (+0.53%) ↑
+NAS100  |  18452.3  |  -34.1 (-0.18%) ↓
+BTCUSD  |  67210.5  |  +410.2 (+0.61%) ↑
+3. UI DESIGN (INSTITUTIONAL STYLE)
+
+Create a sticky top ticker bar:
+
+Fixed at top of dashboard
+Horizontal flex layout
+Dark background (#0B0F17)
+Subtle border bottom
+Smooth scrolling or static inline layout
+Green for bullish moves
+Red for bearish moves
+Mono font for numbers
+
+Optional:
+
+Add subtle animation when price updates (flash green/red)
+4. COMPONENT STRUCTURE
+
+Create:
+
+components/
+ ├── PriceTicker.tsx
+ ├── hooks/
+ │    └── useMarketData.ts
+ ├── lib/
+      └── marketApi.ts
+🧠 5. IMPLEMENTATION DETAILS
+🔹 PriceTicker.tsx
+Fetches data from hook
+Displays 3 asset cards in a row
+Sticky top of dashboard
+Auto-refresh every 5–10 seconds
+🔹 useMarketData.ts (Hook)
+Uses setInterval polling
+Calls API function
+Stores state:
+{
+  xauusd: { price, change, percent },
+  nas100: { price, change, percent },
+  btcusd: { price, change, percent }
+}
+🔹 marketApi.ts
+
+Abstract API layer:
+
+fetchXAUUSD()
+fetchNAS100()
+fetchBTCUSD()
+
+Allow easy swap between APIs later.
+
+⚡ 6. BEHAVIOR RULES
+Must update without page reload
+Must not block UI rendering
+Must handle API failure gracefully
+If API fails → show last known price
+Must show loading state on first render
+📊 7. UX DETAILS (IMPORTANT)
+
+Add institutional feel:
+
+Price flicker animation on update
+Small arrow icons (↑ ↓)
+Color-coded movement
+Compact spacing
+Always visible at top of Trading Hub
+🚀 8. INTEGRATION RULE
+
+Insert component into:
+
+TradingHubPage layout → TOP ABOVE TopBar
+
+OR replace TopBar price section with ticker.
+
+🔥 FINAL OUTCOME
+
+After implementation, BlazeOS should feel like:
+
+A live trading desk terminal with real-time global market feeds
