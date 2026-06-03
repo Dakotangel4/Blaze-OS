@@ -1,0 +1,215 @@
+Connect the existing BlazeOS application to Supabase and migrate all local/mock data to Supabase.
+
+PROJECT GOAL
+
+Transform BlazeOS from a frontend prototype into a fully functional cloud-backed application using Supabase.
+
+TECH STACK
+
+* Next.js
+* TypeScript
+* Supabase
+* Tailwind CSS
+* Shadcn/UI
+
+SUPABASE SETUP
+
+Create a complete Supabase integration layer.
+
+Environment variables:
+
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+Create:
+
+src/lib/supabase.ts
+
+Requirements:
+
+* Initialize Supabase client
+* Type-safe setup
+* Error handling
+* Reusable throughout application
+
+AUTHENTICATION
+
+Implement Supabase Auth:
+
+* Email signup
+* Email login
+* Logout
+* Password reset
+* Session persistence
+* Protected dashboard routes
+
+Unauthenticated users must be redirected to login.
+
+DATABASE TABLES
+
+Create and connect:
+
+trades
+journal_entries
+knowledge_notes
+clients
+calendar_events
+user_settings
+
+Each table must include:
+
+* id
+* user_id
+* created_at
+* updated_at
+
+Enable Row Level Security (RLS).
+
+Users can only access their own records.
+
+TRADING HUB INTEGRATION
+
+Replace all mock data.
+
+Trades must be loaded directly from Supabase.
+
+Features:
+
+* Create trade
+* Edit trade
+* Delete trade
+* View trade history
+* Upload screenshots to Supabase Storage
+
+Fields:
+
+* symbol
+* direction
+* entry_price
+* exit_price
+* risk_percent
+* lot_size
+* setup_type
+* session
+* result
+* notes
+* screenshot_before
+* screenshot_after
+
+KNOWLEDGE VAULT
+
+Connect all notes to Supabase.
+
+Features:
+
+* Create note
+* Edit note
+* Delete note
+* Search notes
+* Category filtering
+
+Categories:
+
+* Forex
+* SMC
+* ICT
+* AI
+* Sales
+* Web Development
+
+CLIENT CRM
+
+Store all client records in Supabase.
+
+Features:
+
+* Add client
+* Update status
+* Delete client
+* Search clients
+
+Statuses:
+
+Lead
+Contacted
+Proposal Sent
+Demo
+Paid
+In Progress
+Completed
+
+SETTINGS PAGE
+
+Create Settings section.
+
+Store:
+
+* Finnhub API Key
+* Theme preferences
+* User profile data
+
+Create user_settings table.
+
+MARKET DATA PREPARATION
+
+Create architecture for future Finnhub integration.
+
+Store:
+
+* finnhub_api_key
+* provider_name
+* last_sync
+
+Do not hardcode any API keys.
+
+SUPABASE STORAGE
+
+Create storage buckets:
+
+trade-screenshots
+uploads
+
+Enable secure uploads.
+
+Only owner can access uploaded files.
+
+DASHBOARD
+
+All dashboard widgets must load from Supabase:
+
+* Active trades
+* Trade statistics
+* Journal entries
+* Client counts
+* Knowledge notes
+
+Replace every mock value with real database data.
+
+ERROR HANDLING
+
+Add:
+
+* Loading states
+* Empty states
+* Error states
+* Success toasts
+
+UI REQUIREMENTS
+
+Keep existing BlazeOS design.
+
+Maintain dark institutional trading-terminal appearance.
+
+DELIVERABLE
+
+Produce:
+
+* Complete Supabase integration
+* Authentication system
+* Database CRUD operations
+* Storage integration
+* Protected routes
+* RLS-ready architecture
+* Production-ready TypeScript code
+
+The application should be fully functional with Supabase as the primary backend and no longer depend on mock data.
