@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
 import { useQueryClient } from "@tanstack/react-query";
+import { safeFormatDate } from "@/utils/dateSafe";
 import { 
   useListCalendarEvents, 
   useCreateCalendarEvent,
@@ -47,7 +48,11 @@ export default function EconomicCalendar() {
     ...(filterCurrency !== "all" ? { currency: filterCurrency } : {}),
   };
 
-  const { data: events, isLoading } = useListCalendarEvents(queryParams);
+  const { data: rawEvents, isLoading } = useListCalendarEvents(queryParams);
+
+  const events = rawEvents?.filter(
+    (e) => e.eventTime && !isNaN(new Date(e.eventTime).getTime())
+  );
   const createEvent = useCreateCalendarEvent();
   const updateEvent = useUpdateCalendarEvent();
 
@@ -234,8 +239,8 @@ export default function EconomicCalendar() {
                   <TableRow key={event.id} className="hover:bg-white/5 transition-colors group">
                     <TableCell className="font-mono text-sm whitespace-nowrap">
                       <div className="flex flex-col">
-                        <span className="font-semibold text-foreground">{format(new Date(event.eventTime), "HH:mm")}</span>
-                        <span className="text-xs text-muted-foreground">{format(new Date(event.eventTime), "MMM d")}</span>
+                        <span className="font-semibold text-foreground">{safeFormatDate(event.eventTime, "HH:mm")}</span>
+                        <span className="text-xs text-muted-foreground">{safeFormatDate(event.eventTime, "MMM d", "No date")}</span>
                       </div>
                     </TableCell>
                     <TableCell className="font-bold">{event.currency}</TableCell>
