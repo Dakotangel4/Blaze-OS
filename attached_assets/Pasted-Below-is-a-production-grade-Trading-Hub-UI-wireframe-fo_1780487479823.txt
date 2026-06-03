@@ -1,0 +1,156 @@
+Below is a production-grade Trading Hub UI wireframe for BlazeOS. This is structured for direct implementation in Next.js + Tailwind + Shadcn/UI.
+
+🧠 BLAZEOS — TRADING HUB UI WIREFRAME
+📌 PAGE STRUCTURE (LAYOUT GRID)
+┌──────────────────────────────────────────────────────────────┐
+│ TOP BAR (GLOBAL STATUS)                                      │
+│ Date | Equity | Daily P/L | Risk Used | News Countdown       │
+└──────────────────────────────────────────────────────────────┘
+
+┌───────────────┬──────────────────────────────────────────────┐
+│ SIDEBAR       │ MAIN WORKSPACE                               │
+│               │                                              │
+│ Dashboard     │  ┌────────────────────────────────────────┐  │
+│ Trading Hub   │  │ DAILY BIAS PANEL                       │  │
+│ Risk Tool     │  │ XAUUSD / NAS100 Direction             │  │
+│ Journal       │  │ Bias: Bullish / Bearish / Neutral     │  │
+│ Calendar      │  │ DXY | Yields | Sentiment              │  │
+│ Knowledge     │  └────────────────────────────────────────┘  │
+│ CRM           │                                              │
+│ Finance       │  ┌───────────────┬────────────────────────┐  │
+│ AI Center     │  │ ACTIVE TRADES │ RISK SNAPSHOT          │  │
+│               │  │               │                        │  │
+│               │  │ Trade #1      │ Risk per trade: 0.5%  │  │
+│               │  │ XAUUSD SELL    │ Max DD used: 2.1%     │  │
+│               │  │ +$45           │ Remaining buffer       │  │
+│               │  └───────────────┴────────────────────────┘  │
+│               │                                              │
+│               │  ┌────────────────────────────────────────┐  │
+│               │  │ QUICK ACTIONS                          │  │
+│               │  │ [+ New Trade] [+ Add Bias] [+ Upload] │  │
+│               │  └────────────────────────────────────────┘  │
+│               │                                              │
+│               │  ┌────────────────────────────────────────┐  │
+│               │  │ ECONOMIC CALENDAR SNAPSHOT             │  │
+│               │  │ 14:15 ADP Employment (HIGH)           │  │
+│               │  │ 16:00 ISM Services (HIGH)             │  │
+│               │  └────────────────────────────────────────┘  │
+│               │                                              │
+└───────────────┴──────────────────────────────────────────────┘
+📊 COMPONENT BREAKDOWN
+1. 🧭 TOP BAR (INSTITUTIONAL STATUS STRIP)
+Purpose:
+
+Real-time trading snapshot like a prop desk terminal.
+
+UI Elements:
+Date (GMT+1)
+Account Balance
+Daily P/L
+Risk Used %
+Open Trades Count
+News Countdown Timer
+Example:
+Balance: $5,240 | P/L: +2.1% | Risk: 0.9% | Trades: 2 | ADP: 01:22
+2. 📌 DAILY BIAS PANEL (CORE EDGE MODULE)
+Layout:
+XAUUSD BIAS: BEARISH
+
+DXY: STRONG ↑
+Yields: RISING ↑
+Sentiment: RISK OFF / NEUTRAL
+Liquidity Target: PDL / Weekly Low
+Add toggles:
+Bullish / Bearish / Neutral
+Session tag (London / NY)
+3. 📉 ACTIVE TRADES PANEL
+Each Trade Card:
+XAUUSD SELL
+Entry: 2335.20
+Current: +12.5 pips
+Risk: 0.5%
+Status: Running
+
+[View] [Close] [Edit]
+Features:
+Live P/L tracking
+Partial close option (future upgrade)
+Tag: SMC / ICT / Breakout
+4. ⚖ RISK SNAPSHOT MODULE
+UI Box:
+Risk per trade: 0.5%
+Max Daily Loss: 2%
+Used: 1.2%
+Remaining: 0.8%
+
+Safe Zone: ACTIVE / WARNING / BREACH
+5. ⚡ QUICK ACTIONS BAR
+
+Buttons:
+
+➕ New Trade
+🧠 Add Bias Note
+📸 Upload Screenshot
+📊 Open Risk Calculator
+📅 Add News Event
+
+Style:
+
+Glassmorphism buttons
+Hover glow effect
+6. 📅 ECONOMIC CALENDAR WIDGET
+Table View:
+TIME     EVENT                 IMPACT
+14:15    ADP Employment       HIGH
+16:00    ISM Services PMI     HIGH
+20:00    Fed Beige Book       MED
+Color coding:
+High = Red
+Medium = Orange
+Low = Gray
+7. 🧠 OPTIONAL RIGHT PANEL (PRO LEVEL UPGRADE)
+
+If you want elite UI:
+
+MARKET INTELLIGENCE PANEL
+DXY: BULLISH
+10Y YIELD: ↑
+NASDAQ: RISK ON
+GOLD FLOW: SELL SIDE PRESSURE
+🎨 UI STYLE SYSTEM
+Theme:
+Dark institutional (like Bloomberg terminal meets TradingView)
+Colors:
+Background: #0B0F17
+Card: #111827
+Border: #1F2937
+Accent: #38BDF8 (blue) / #F59E0B (amber alerts)
+Typography:
+Inter / Geist UI font
+Mono font for numbers
+🧱 NEXT.JS FILE STRUCTURE
+app/
+ ├── dashboard/
+ │    ├── trading-hub/
+ │    │     ├── page.tsx
+ │    │     ├── components/
+ │    │           ├── TopBar.tsx
+ │    │           ├── BiasPanel.tsx
+ │    │           ├── ActiveTrades.tsx
+ │    │           ├── RiskWidget.tsx
+ │    │           ├── Calendar.tsx
+ │    │           ├── QuickActions.tsx
+🔥 KEY DESIGN PRINCIPLE
+
+This is not a dashboard.
+
+It is:
+
+A decision execution terminal for a discretionary trader
+
+Everything must answer:
+
+“Should I trade now?”
+“What is my risk exposure?”
+“Where is liquidity?”
+“What is the macro bias?”

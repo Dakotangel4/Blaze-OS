@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "BlazeOS"
+version = "1.0.0"
+id = "artifacts/blazeos"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24517
+
+[services.development]
+run = "pnpm --filter @workspace/blazeos run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/blazeos", "run", "build" ]
+publicDir = "artifacts/blazeos/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24517"
+BASE_PATH = "/"

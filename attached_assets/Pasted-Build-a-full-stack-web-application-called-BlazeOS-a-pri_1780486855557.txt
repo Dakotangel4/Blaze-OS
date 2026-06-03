@@ -1,0 +1,217 @@
+Build a full-stack web application called “BlazeOS”, a private login-only institutional-grade trading, AI, and business operating system.
+
+The system must function as a personal hedge-fund style dashboard + CRM + knowledge vault + AI assistant + trading journal.
+
+🧠 CORE OBJECTIVE
+
+Create a unified workspace where a trader/web developer can:
+
+Track and analyze trades (XAUUSD, NAS100, BTC)
+Maintain a trading journal with screenshots
+Calculate risk and position sizing
+Monitor economic calendar events
+Store trading knowledge (SMC/ICT/Forex/AI/Sales)
+Manage web design clients (CRM)
+Track income and performance
+Use AI to analyze trades and generate insights
+⚙️ TECH STACK (MANDATORY)
+Next.js (App Router)
+TypeScript
+Tailwind CSS
+Shadcn/UI components
+Supabase (Auth + Database + Storage)
+Vercel-ready deployment
+🔐 AUTH SYSTEM
+Email/password authentication via Supabase
+Protected dashboard routes
+Only logged-in users can access system
+Public landing page optional
+📊 MAIN DASHBOARD (BlazeOS Home)
+
+Create a clean institutional dashboard UI with:
+
+Widgets:
+Daily Trading Bias Card (editable)
+Active Trades Panel
+Account Performance Summary
+Risk Overview (daily risk %, drawdown)
+Economic Calendar snapshot (manual or API-ready placeholder)
+Quick Notes panel
+
+UI style:
+
+Dark mode default
+Minimalist institutional trading terminal style
+Clean cards, soft borders, professional layout
+📒 TRADING HUB MODULE
+
+Build a full trading journal system:
+
+Features:
+Add new trade (form)
+Upload screenshots (before + after trade)
+Fields:
+Symbol (XAUUSD, NAS100, BTCUSD)
+Direction (Buy/Sell)
+Entry / Exit price
+Risk %
+Lot size
+Setup type (SMC / ICT / Breakout)
+Session (London / New York)
+Result (Win/Loss)
+Notes
+Screenshot upload
+Views:
+Trade list (filterable)
+Trade detail page
+Performance analytics (basic charts)
+⚖️ RISK CALCULATOR MODULE
+
+Create a calculator tool:
+
+Inputs:
+
+Account balance
+Risk percentage
+Stop loss (pips or points)
+Instrument
+
+Outputs:
+
+Lot size
+Monetary risk
+Max loss per trade
+🧠 KNOWLEDGE VAULT
+
+A structured note system (like Notion).
+
+Categories:
+Forex
+SMC / ICT
+AI
+Sales
+Web Development
+
+Features:
+
+Create/edit notes
+Tag system
+Search bar
+Markdown support
+💼 CRM (CLIENT MANAGEMENT SYSTEM)
+
+Simple pipeline system:
+
+Fields:
+
+Client name
+Business type
+Contact info
+Project status:
+Lead → Contacted → Proposal Sent → Demo → Paid → In Progress → Completed
+Payment status
+Notes
+
+Include:
+
+Kanban board view OR table view
+📅 ECONOMIC CALENDAR MODULE
+
+Create a structured calendar UI:
+
+Fields:
+
+Time (GMT+1)
+Currency
+Event name
+Impact level (High/Medium/Low)
+Forecast
+Previous
+Actual (optional manual input)
+🤖 AI COMMAND CENTER (IMPORTANT)
+
+Create an AI chat interface placeholder system.
+
+It must support:
+
+AI Tools (mock integration ready):
+Trade Analyzer
+Daily Market Bias Generator
+Journal Summary Generator
+Client Proposal Generator
+
+UI:
+
+Chat-style interface
+Input box
+Response panel
+
+No need for real API keys yet, but structure must support:
+
+OpenAI API
+Claude API
+Perplexity API
+📈 FINANCE TRACKER
+
+Simple dashboard:
+
+Monthly trading profit
+Web design income
+Printing business income
+Total revenue
+Expense tracker
+
+Include basic charts (Recharts or similar)
+
+🎨 UI/UX REQUIREMENTS
+Dark institutional trading theme
+Clean spacing, premium feel
+Responsive mobile + desktop
+Smooth transitions
+Sidebar navigation:
+Dashboard
+Trading Hub
+Risk Calculator
+Knowledge Vault
+CRM
+Economic Calendar
+AI Center
+Finance
+🧱 DATABASE STRUCTURE (SUPABASE)
+
+Create tables:
+
+users
+trades
+journal_entries
+clients
+notes
+calendar_events
+finances
+
+Ensure relational structure with user_id.
+
+🚀 FINAL OUTPUT
+
+Deliver:
+
+Fully working Next.js app
+Supabase connected authentication
+CRUD for trades, clients, notes
+Dashboard UI complete
+Modular architecture
+Clean production-level code structure
+⚠️ IMPORTANT
+
+This is NOT a demo app.
+
+It must feel like a:
+
+"private institutional trading terminal + business operating system"
+
+Focus on:
+
+clean architecture
+scalability
+professional UI
+usable workflows

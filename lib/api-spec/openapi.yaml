@@ -3,20 +3,32 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: BlazeOS API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: trades
+    description: Trading journal entries
+  - name: clients
+    description: CRM client management
+  - name: notes
+    description: Knowledge vault notes
+  - name: calendar
+    description: Economic calendar events
+  - name: finances
+    description: Finance tracker
+  - name: dashboard
+    description: Dashboard aggregates
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +36,547 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ─── DASHBOARD ────────────────────────────────────────────
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: Summary data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/bias:
+    get:
+      operationId: getDailyBias
+      tags: [dashboard]
+      summary: Get current daily trading bias
+      responses:
+        "200":
+          description: Current bias
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DailyBias"
+    put:
+      operationId: updateDailyBias
+      tags: [dashboard]
+      summary: Set daily trading bias
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DailyBiasInput"
+      responses:
+        "200":
+          description: Updated bias
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DailyBias"
+
+  # ─── TRADES ────────────────────────────────────────────────
+  /trades:
+    get:
+      operationId: listTrades
+      tags: [trades]
+      summary: List all trades
+      parameters:
+        - in: query
+          name: symbol
+          schema:
+            type: string
+        - in: query
+          name: result
+          schema:
+            type: string
+        - in: query
+          name: session
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of trades
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Trade"
+    post:
+      operationId: createTrade
+      tags: [trades]
+      summary: Log a new trade
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TradeInput"
+      responses:
+        "201":
+          description: Created trade
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trade"
+
+  /trades/stats:
+    get:
+      operationId: getTradeStats
+      tags: [trades]
+      summary: Get trade performance statistics
+      responses:
+        "200":
+          description: Trade stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TradeStats"
+
+  /trades/{id}:
+    get:
+      operationId: getTrade
+      tags: [trades]
+      summary: Get a single trade
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Trade
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trade"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateTrade
+      tags: [trades]
+      summary: Update a trade
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TradeUpdate"
+      responses:
+        "200":
+          description: Updated trade
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trade"
+    delete:
+      operationId: deleteTrade
+      tags: [trades]
+      summary: Delete a trade
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── CLIENTS ────────────────────────────────────────────────
+  /clients:
+    get:
+      operationId: listClients
+      tags: [clients]
+      summary: List all CRM clients
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+    post:
+      operationId: createClient
+      tags: [clients]
+      summary: Create a new client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientInput"
+      responses:
+        "201":
+          description: Created client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+
+  /clients/pipeline:
+    get:
+      operationId: getClientPipeline
+      tags: [clients]
+      summary: Get clients grouped by pipeline stage
+      responses:
+        "200":
+          description: Pipeline breakdown
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientPipeline"
+
+  /clients/{id}:
+    get:
+      operationId: getClient
+      tags: [clients]
+      summary: Get a single client
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateClient
+      tags: [clients]
+      summary: Update a client
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientUpdate"
+      responses:
+        "200":
+          description: Updated client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+    delete:
+      operationId: deleteClient
+      tags: [clients]
+      summary: Delete a client
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── KNOWLEDGE VAULT NOTES ────────────────────────────────
+  /notes:
+    get:
+      operationId: listNotes
+      tags: [notes]
+      summary: List all knowledge vault notes
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: q
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of notes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Note"
+    post:
+      operationId: createNote
+      tags: [notes]
+      summary: Create a knowledge note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoteInput"
+      responses:
+        "201":
+          description: Created note
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Note"
+
+  /notes/{id}:
+    get:
+      operationId: getNote
+      tags: [notes]
+      summary: Get a single note
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Note
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Note"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateNote
+      tags: [notes]
+      summary: Update a note
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoteUpdate"
+      responses:
+        "200":
+          description: Updated note
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Note"
+    delete:
+      operationId: deleteNote
+      tags: [notes]
+      summary: Delete a note
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── ECONOMIC CALENDAR ────────────────────────────────────
+  /calendar:
+    get:
+      operationId: listCalendarEvents
+      tags: [calendar]
+      summary: List economic calendar events
+      parameters:
+        - in: query
+          name: impact
+          schema:
+            type: string
+        - in: query
+          name: currency
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CalendarEvent"
+    post:
+      operationId: createCalendarEvent
+      tags: [calendar]
+      summary: Create an economic calendar event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalendarEventInput"
+      responses:
+        "201":
+          description: Created event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalendarEvent"
+
+  /calendar/{id}:
+    patch:
+      operationId: updateCalendarEvent
+      tags: [calendar]
+      summary: Update a calendar event (e.g. add actual value)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalendarEventUpdate"
+      responses:
+        "200":
+          description: Updated event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalendarEvent"
+    delete:
+      operationId: deleteCalendarEvent
+      tags: [calendar]
+      summary: Delete a calendar event
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── FINANCES ─────────────────────────────────────────────
+  /finances:
+    get:
+      operationId: listFinances
+      tags: [finances]
+      summary: List all finance entries
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+        - in: query
+          name: month
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Finance"
+    post:
+      operationId: createFinance
+      tags: [finances]
+      summary: Create a finance entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinanceInput"
+      responses:
+        "201":
+          description: Created entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Finance"
+
+  /finances/summary:
+    get:
+      operationId: getFinanceSummary
+      tags: [finances]
+      summary: Get monthly and total revenue/expense summary
+      responses:
+        "200":
+          description: Finance summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinanceSummary"
+
+  /finances/{id}:
+    patch:
+      operationId: updateFinance
+      tags: [finances]
+      summary: Update a finance entry
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinanceUpdate"
+      responses:
+        "200":
+          description: Updated entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Finance"
+    delete:
+      operationId: deleteFinance
+      tags: [finances]
+      summary: Delete a finance entry
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +587,326 @@ components:
       required:
         - status
 
+    # ─── DASHBOARD ─────────────────────────────────────────
+    DashboardSummary:
+      type: object
+      required: [totalTrades, winRate, totalPnl, openClients, totalNotes, upcomingEvents, monthlyRevenue]
+      properties:
+        totalTrades: { type: integer }
+        winRate: { type: number }
+        totalPnl: { type: number }
+        openClients: { type: integer }
+        totalNotes: { type: integer }
+        upcomingEvents: { type: integer }
+        monthlyRevenue: { type: number }
+        recentTrades:
+          type: array
+          items:
+            $ref: "#/components/schemas/Trade"
+
+    DailyBias:
+      type: object
+      required: [id, direction, notes, updatedAt]
+      properties:
+        id: { type: integer }
+        direction: { type: string }
+        notes: { type: ["string", "null"] }
+        updatedAt: { type: string, format: date-time }
+
+    DailyBiasInput:
+      type: object
+      required: [direction]
+      properties:
+        direction: { type: string }
+        notes: { type: string }
+
+    # ─── TRADES ────────────────────────────────────────────
+    Trade:
+      type: object
+      required: [id, symbol, direction, entryPrice, exitPrice, riskPercent, lotSize, setupType, session, result, createdAt]
+      properties:
+        id: { type: integer }
+        symbol: { type: string }
+        direction: { type: string }
+        entryPrice: { type: number }
+        exitPrice: { type: number }
+        riskPercent: { type: number }
+        lotSize: { type: number }
+        setupType: { type: string }
+        session: { type: string }
+        result: { type: string }
+        notes: { type: ["string", "null"] }
+        screenshotBefore: { type: ["string", "null"] }
+        screenshotAfter: { type: ["string", "null"] }
+        pnl: { type: ["number", "null"] }
+        createdAt: { type: string, format: date-time }
+
+    TradeInput:
+      type: object
+      required: [symbol, direction, entryPrice, exitPrice, riskPercent, lotSize, setupType, session, result]
+      properties:
+        symbol: { type: string }
+        direction: { type: string }
+        entryPrice: { type: number }
+        exitPrice: { type: number }
+        riskPercent: { type: number }
+        lotSize: { type: number }
+        setupType: { type: string }
+        session: { type: string }
+        result: { type: string }
+        notes: { type: string }
+        screenshotBefore: { type: string }
+        screenshotAfter: { type: string }
+        pnl: { type: number }
+
+    TradeUpdate:
+      type: object
+      properties:
+        symbol: { type: string }
+        direction: { type: string }
+        entryPrice: { type: number }
+        exitPrice: { type: number }
+        riskPercent: { type: number }
+        lotSize: { type: number }
+        setupType: { type: string }
+        session: { type: string }
+        result: { type: string }
+        notes: { type: string }
+        screenshotBefore: { type: string }
+        screenshotAfter: { type: string }
+        pnl: { type: number }
+
+    TradeStats:
+      type: object
+      required: [totalTrades, wins, losses, winRate, totalPnl, avgRisk, bestTrade, worstTrade]
+      properties:
+        totalTrades: { type: integer }
+        wins: { type: integer }
+        losses: { type: integer }
+        winRate: { type: number }
+        totalPnl: { type: number }
+        avgRisk: { type: number }
+        bestTrade: { type: ["number", "null"] }
+        worstTrade: { type: ["number", "null"] }
+        bySymbol:
+          type: array
+          items:
+            $ref: "#/components/schemas/TradeStatBySymbol"
+        bySetup:
+          type: array
+          items:
+            $ref: "#/components/schemas/TradeStatBySetup"
+
+    TradeStatBySymbol:
+      type: object
+      required: [symbol, count, winRate, pnl]
+      properties:
+        symbol: { type: string }
+        count: { type: integer }
+        winRate: { type: number }
+        pnl: { type: number }
+
+    TradeStatBySetup:
+      type: object
+      required: [setupType, count, winRate]
+      properties:
+        setupType: { type: string }
+        count: { type: integer }
+        winRate: { type: number }
+
+    # ─── CLIENTS ───────────────────────────────────────────
+    Client:
+      type: object
+      required: [id, name, businessType, status, paymentStatus, createdAt]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        businessType: { type: string }
+        contactInfo: { type: ["string", "null"] }
+        status: { type: string }
+        paymentStatus: { type: string }
+        notes: { type: ["string", "null"] }
+        projectValue: { type: ["number", "null"] }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    ClientInput:
+      type: object
+      required: [name, businessType, status, paymentStatus]
+      properties:
+        name: { type: string }
+        businessType: { type: string }
+        contactInfo: { type: string }
+        status: { type: string }
+        paymentStatus: { type: string }
+        notes: { type: string }
+        projectValue: { type: number }
+
+    ClientUpdate:
+      type: object
+      properties:
+        name: { type: string }
+        businessType: { type: string }
+        contactInfo: { type: string }
+        status: { type: string }
+        paymentStatus: { type: string }
+        notes: { type: string }
+        projectValue: { type: number }
+
+    ClientPipeline:
+      type: object
+      required: [stages]
+      properties:
+        stages:
+          type: array
+          items:
+            $ref: "#/components/schemas/PipelineStage"
+        totalValue: { type: number }
+
+    PipelineStage:
+      type: object
+      required: [stage, count, value]
+      properties:
+        stage: { type: string }
+        count: { type: integer }
+        value: { type: number }
+        clients:
+          type: array
+          items:
+            $ref: "#/components/schemas/Client"
+
+    # ─── NOTES ─────────────────────────────────────────────
+    Note:
+      type: object
+      required: [id, title, category, content, createdAt, updatedAt]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        category: { type: string }
+        content: { type: string }
+        tags: { type: ["string", "null"] }
+        isPinned: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    NoteInput:
+      type: object
+      required: [title, category, content]
+      properties:
+        title: { type: string }
+        category: { type: string }
+        content: { type: string }
+        tags: { type: string }
+        isPinned: { type: boolean }
+
+    NoteUpdate:
+      type: object
+      properties:
+        title: { type: string }
+        category: { type: string }
+        content: { type: string }
+        tags: { type: string }
+        isPinned: { type: boolean }
+
+    # ─── CALENDAR ──────────────────────────────────────────
+    CalendarEvent:
+      type: object
+      required: [id, eventTime, currency, eventName, impact, createdAt]
+      properties:
+        id: { type: integer }
+        eventTime: { type: string }
+        currency: { type: string }
+        eventName: { type: string }
+        impact: { type: string }
+        forecast: { type: ["string", "null"] }
+        previous: { type: ["string", "null"] }
+        actual: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+
+    CalendarEventInput:
+      type: object
+      required: [eventTime, currency, eventName, impact]
+      properties:
+        eventTime: { type: string }
+        currency: { type: string }
+        eventName: { type: string }
+        impact: { type: string }
+        forecast: { type: string }
+        previous: { type: string }
+        actual: { type: string }
+
+    CalendarEventUpdate:
+      type: object
+      properties:
+        eventTime: { type: string }
+        currency: { type: string }
+        eventName: { type: string }
+        impact: { type: string }
+        forecast: { type: string }
+        previous: { type: string }
+        actual: { type: string }
+
+    # ─── FINANCES ──────────────────────────────────────────
+    Finance:
+      type: object
+      required: [id, type, category, amount, description, month, createdAt]
+      properties:
+        id: { type: integer }
+        type: { type: string }
+        category: { type: string }
+        amount: { type: number }
+        description: { type: string }
+        month: { type: string }
+        createdAt: { type: string, format: date-time }
+
+    FinanceInput:
+      type: object
+      required: [type, category, amount, description, month]
+      properties:
+        type: { type: string }
+        category: { type: string }
+        amount: { type: number }
+        description: { type: string }
+        month: { type: string }
+
+    FinanceUpdate:
+      type: object
+      properties:
+        type: { type: string }
+        category: { type: string }
+        amount: { type: number }
+        description: { type: string }
+        month: { type: string }
+
+    FinanceSummary:
+      type: object
+      required: [totalRevenue, totalExpenses, netProfit, monthlyBreakdown]
+      properties:
+        totalRevenue: { type: number }
+        totalExpenses: { type: number }
+        netProfit: { type: number }
+        monthlyBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonthlyFinance"
+        byCategory:
+          type: array
+          items:
+            $ref: "#/components/schemas/FinanceByCategory"
+
+    MonthlyFinance:
+      type: object
+      required: [month, revenue, expenses, profit]
+      properties:
+        month: { type: string }
+        revenue: { type: number }
+        expenses: { type: number }
+        profit: { type: number }
+
+    FinanceByCategory:
+      type: object
+      required: [category, total, type]
+      properties:
+        category: { type: string }
+        total: { type: number }
+        type: { type: string }
