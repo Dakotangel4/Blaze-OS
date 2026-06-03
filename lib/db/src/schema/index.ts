@@ -4,3 +4,4 @@ export * from "./notes";
 export * from "./calendarEvents";
 export * from "./finances";
 export * from "./dailyBias";
+export * from "./userSettings";

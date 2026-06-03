@@ -16,6 +16,7 @@ import CRM from "@/pages/CRM";
 import EconomicCalendar from "@/pages/EconomicCalendar";
 import AICenter from "@/pages/AICenter";
 import FinanceTracker from "@/pages/FinanceTracker";
+import Settings from "@/pages/Settings";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
 const queryClient = new QueryClient();
@@ -198,6 +199,7 @@ function ClerkProviderWithRoutes() {
             <Route path="/calendar"><ProtectedRoute component={EconomicCalendar} /></Route>
             <Route path="/ai"><ProtectedRoute component={AICenter} /></Route>
             <Route path="/finance"><ProtectedRoute component={FinanceTracker} /></Route>
+            <Route path="/settings"><ProtectedRoute component={Settings} /></Route>
             
             <Route>
               <div className="flex min-h-screen items-center justify-center bg-background text-foreground">

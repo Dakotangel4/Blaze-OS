@@ -1,0 +1,221 @@
+REPLIT PROMPT — Add Professional Finnhub API Integration & Settings Management
+
+Implement a production-ready market data integration system that allows users to connect their own Finnhub API key and replace all simulated market data with real-time live quotes.
+
+OBJECTIVE
+
+Create a secure Market Data Settings Module where users can enter, update, test, and manage a Finnhub API key.
+
+Once configured, the Trading Hub should automatically use Finnhub live market data for:
+
+XAUUSD (Gold)
+NAS100 (NASDAQ 100)
+BTCUSD (optional future extension)
+
+and fall back to mock/simulated data when no valid API key exists.
+
+SETTINGS PAGE
+
+Create a new section:
+
+Settings
+ └── Market Data
+Market Data Configuration Card
+
+Fields:
+
+Provider: Finnhub
+API Key Input
+Connection Status
+Last Successful Sync
+Test Connection Button
+Save Settings Button
+UI REQUIREMENTS
+API Key Input
+Password-style field by default
+Show/Hide toggle
+Copy button
+Clear button
+
+Example:
+
+Finnhub API Key
+[*********************] 👁
+Connection Status Indicator
+
+Show:
+
+🟢 Connected
+🔴 Invalid API Key
+🟡 Testing Connection...
+⚪ Not Configured
+
+Use badges and color-coded states.
+
+Test Connection
+
+When clicked:
+
+Validate API key
+Make test request to Finnhub
+Return success/failure message
+Update status badge
+STORAGE REQUIREMENTS
+
+Store API key securely.
+
+Do NOT hardcode keys.
+
+Preferred options:
+
+Option A (Single User)
+
+Store in:
+
+Supabase settings table
+Option B (Multi User)
+
+Store per user:
+
+user_settings
+-------------
+id
+user_id
+finnhub_api_key
+created_at
+updated_at
+
+API keys must be linked to authenticated users.
+
+LIVE MARKET DATA SERVICE
+
+Create:
+
+src/
+ ├── services/
+ │     ├── marketData.ts
+ │     ├── finnhubService.ts
+finnhubService.ts
+
+Responsible for:
+
+Authentication
+Quote retrieval
+Error handling
+Rate limit handling
+
+Functions:
+
+getXAUUSDPrice()
+getNAS100Price()
+getBTCUSDPrice()
+testFinnhubConnection()
+TRADING HUB INTEGRATION
+
+Replace all simulated ticker values.
+
+Current behavior:
+
+XAUUSD = mock data
+NAS100 = mock data
+
+New behavior:
+
+If API key exists:
+    use Finnhub live data
+
+Else:
+    fallback to mock data
+TOP TICKER BAR
+
+Update ticker bar to display:
+
+Symbol
+XAUUSD
+NAS100
+BTCUSD
+Current Price
+
+Live value
+
+Daily Change
++$12.50
+-0.35%
+Direction
+↑
+↓
+Last Update Timestamp
+Updated 14:35:12
+ERROR HANDLING
+
+Handle:
+
+Missing API Key
+
+Display:
+
+Market data not configured.
+Add a Finnhub API key in Settings.
+Invalid API Key
+
+Display:
+
+Finnhub authentication failed.
+Check API key.
+Rate Limit Reached
+
+Display:
+
+Rate limit reached.
+Using cached data.
+Network Failure
+
+Display:
+
+Unable to retrieve market data.
+Showing last known prices.
+CACHING STRATEGY
+
+Implement caching.
+
+Requirements:
+
+Store last successful quote
+Cache for 30–60 seconds
+Reduce API requests
+Continue displaying last known values during failures
+SECURITY REQUIREMENTS
+Never expose API keys in client logs
+Never hardcode API keys
+Mask keys in UI
+Validate before saving
+Use environment-aware architecture
+USER EXPERIENCE
+
+When a valid key is added:
+
+Save key
+Verify connection
+Refresh market feed
+Update ticker automatically
+Show success toast
+
+Example:
+
+✓ Finnhub connected successfully.
+Live market data is now active.
+DELIVERABLE
+
+Provide:
+
+Settings page UI
+Supabase schema updates
+Finnhub service layer
+API routes
+Secure API key storage
+Live Trading Hub integration
+Automatic fallback to simulated data
+Clean TypeScript implementation
+Production-ready architecture
+
+The final result should make BlazeOS feel like a professional trading terminal with configurable real-time market data rather than a dashboard using static or simulated quotes.

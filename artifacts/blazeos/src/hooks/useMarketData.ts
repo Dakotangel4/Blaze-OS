@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { fetchBTCUSD, fetchXAUUSD, fetchNAS100 } from "@/lib/marketApi";
 import type { AssetQuote } from "@/lib/marketApi";
+import { useSettings } from "@/hooks/useSettings";
 
 export interface MarketData {
   xauusd: AssetQuote | null;
@@ -11,6 +12,9 @@ export interface MarketData {
 const POLL_INTERVAL_MS = 8000;
 
 export function useMarketData() {
+  const { data: settings } = useSettings();
+  const apiKey = settings?.finnhubApiKey ?? null;
+
   const [data, setData] = useState<MarketData>({ xauusd: null, nas100: null, btcusd: null });
   const [loading, setLoading] = useState(true);
   const [flash, setFlash] = useState<Record<string, "up" | "down" | null>>({});
@@ -25,11 +29,11 @@ export function useMarketData() {
     setTimeout(() => setFlash((f) => ({ ...f, [symbol]: null })), 600);
   };
 
-  const fetchAll = async () => {
+  const fetchAll = async (key: string | null) => {
     const [xau, nas, btc] = await Promise.allSettled([
-      fetchXAUUSD(),
-      fetchNAS100(),
-      fetchBTCUSD(),
+      fetchXAUUSD(key),
+      fetchNAS100(key),
+      fetchBTCUSD(key),
     ]);
 
     setData((prev) => {
@@ -53,11 +57,17 @@ export function useMarketData() {
     setLoading(false);
   };
 
+  // Re-fetch immediately when the API key changes
   useEffect(() => {
-    fetchAll();
-    const id = setInterval(fetchAll, POLL_INTERVAL_MS);
-    return () => clearInterval(id);
-  }, []);
+    fetchAll(apiKey);
+  }, [apiKey]);
 
-  return { data, loading, flash };
+  useEffect(() => {
+    const id = setInterval(() => fetchAll(apiKey), POLL_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [apiKey]);
+
+  const hasLiveKey = Boolean(apiKey);
+
+  return { data, loading, flash, hasLiveKey };
 }

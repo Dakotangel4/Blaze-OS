@@ -6,6 +6,7 @@ import clientsRouter from "./clients";
 import notesRouter from "./notes";
 import calendarRouter from "./calendar";
 import financesRouter from "./finances";
+import settingsRouter from "./settings";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(clientsRouter);
 router.use(notesRouter);
 router.use(calendarRouter);
 router.use(financesRouter);
+router.use(settingsRouter);
 
 export default router;

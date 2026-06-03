@@ -9,6 +9,7 @@ import {
   Calendar,
   Bot,
   DollarSign,
+  Settings,
   LogOut,
   Flame,
   Menu,
@@ -26,6 +27,7 @@ const navItems = [
   { name: "Calendar", href: "/calendar", icon: Calendar },
   { name: "AI Center", href: "/ai", icon: Bot },
   { name: "Finance", href: "/finance", icon: DollarSign },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
