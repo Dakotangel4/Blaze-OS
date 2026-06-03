@@ -1,0 +1,302 @@
+1. FRONTEND — TRADING HUB (NEXT.JS + TAILWIND)
+📁 app/trading-hub/page.tsx
+import { TopBar } from "./components/TopBar";
+import { BiasPanel } from "./components/BiasPanel";
+import { ActiveTrades } from "./components/ActiveTrades";
+import { RiskWidget } from "./components/RiskWidget";
+import { CalendarWidget } from "./components/CalendarWidget";
+import { QuickActions } from "./components/QuickActions";
+
+export default function TradingHubPage() {
+  return (
+    <div className="min-h-screen bg-[#0B0F17] text-white">
+      
+      <TopBar />
+
+      <div className="grid grid-cols-12 gap-4 p-4">
+        
+        {/* Sidebar placeholder */}
+        <div className="col-span-2 hidden md:block bg-[#111827] rounded-xl p-3">
+          <p className="text-xs text-gray-400">BlazeOS NAV</p>
+          <ul className="mt-4 space-y-3 text-sm">
+            <li className="text-blue-400">Trading Hub</li>
+            <li>Journal</li>
+            <li>Risk Tool</li>
+            <li>Knowledge</li>
+            <li>CRM</li>
+          </ul>
+        </div>
+
+        {/* MAIN */}
+        <div className="col-span-12 md:col-span-7 space-y-4">
+          
+          <BiasPanel />
+
+          <div className="grid grid-cols-2 gap-4">
+            <ActiveTrades />
+            <RiskWidget />
+          </div>
+
+          <QuickActions />
+
+          <CalendarWidget />
+        </div>
+
+        {/* RIGHT PANEL */}
+        <div className="col-span-3 hidden md:block space-y-4">
+          <div className="bg-[#111827] p-3 rounded-xl">
+            <p className="text-sm text-gray-400">Market Intelligence</p>
+            <div className="mt-3 text-xs space-y-2">
+              <p>DXY: Bullish ↑</p>
+              <p>Yields: Rising ↑</p>
+              <p>NASDAQ: Neutral</p>
+              <p>Gold Flow: Bearish pressure</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+🧭 2. TOP BAR
+components/TopBar.tsx
+export function TopBar() {
+  return (
+    <div className="flex justify-between items-center px-4 py-3 border-b border-gray-800 bg-[#0B0F17]">
+      
+      <div className="text-sm text-gray-300">
+        📅 June 3 • GMT+1
+      </div>
+
+      <div className="flex gap-6 text-xs">
+        <span>Balance: $5,240</span>
+        <span className="text-green-400">P/L: +2.1%</span>
+        <span>Risk: 0.9%</span>
+        <span>Trades: 2</span>
+        <span className="text-yellow-400">ADP: 01:22</span>
+      </div>
+    </div>
+  );
+}
+🧠 3. DAILY BIAS PANEL
+components/BiasPanel.tsx
+export function BiasPanel() {
+  return (
+    <div className="bg-[#111827] p-4 rounded-xl border border-gray-800">
+      <h2 className="text-sm text-gray-400">Daily Bias</h2>
+
+      <div className="mt-3 space-y-1">
+        <p className="text-lg font-semibold text-red-400">
+          XAUUSD: BEARISH
+        </p>
+
+        <p className="text-xs text-gray-400">
+          DXY: Strong ↑ | Yields: Rising ↑
+        </p>
+
+        <p className="text-xs text-gray-400">
+          Sentiment: Risk Neutral
+        </p>
+
+        <p className="text-xs text-blue-400">
+          Liquidity Target: Previous Day Low
+        </p>
+      </div>
+    </div>
+  );
+}
+📉 4. ACTIVE TRADES
+components/ActiveTrades.tsx
+const trades = [
+  {
+    symbol: "XAUUSD",
+    type: "SELL",
+    entry: 2335.2,
+    pnl: "+12.5 pips",
+    risk: "0.5%"
+  }
+];
+
+export function ActiveTrades() {
+  return (
+    <div className="bg-[#111827] p-4 rounded-xl border border-gray-800">
+      <h2 className="text-sm text-gray-400">Active Trades</h2>
+
+      <div className="mt-3 space-y-3">
+        {trades.map((t, i) => (
+          <div key={i} className="p-2 bg-[#0B0F17] rounded-lg">
+            <p className="text-sm font-semibold">
+              {t.symbol} {t.type}
+            </p>
+            <p className="text-xs text-gray-400">
+              Entry: {t.entry}
+            </p>
+            <p className="text-xs text-green-400">
+              {t.pnl}
+            </p>
+            <p className="text-xs text-gray-500">
+              Risk: {t.risk}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+⚖️ 5. RISK WIDGET
+components/RiskWidget.tsx
+export function RiskWidget() {
+  return (
+    <div className="bg-[#111827] p-4 rounded-xl border border-gray-800">
+      <h2 className="text-sm text-gray-400">Risk Snapshot</h2>
+
+      <div className="mt-3 text-xs space-y-2">
+        <p>Risk/Trade: 0.5%</p>
+        <p>Max DD: 2%</p>
+        <p>Used: 1.2%</p>
+        <p>Remaining: 0.8%</p>
+
+        <p className="text-green-400 mt-2">
+          Status: SAFE
+        </p>
+      </div>
+    </div>
+  );
+}
+⚡ 6. QUICK ACTIONS
+components/QuickActions.tsx
+export function QuickActions() {
+  return (
+    <div className="grid grid-cols-4 gap-3">
+      {["New Trade", "Add Bias", "Upload", "Risk Calc"].map((btn, i) => (
+        <button
+          key={i}
+          className="bg-[#111827] hover:bg-[#1F2937] p-3 rounded-lg text-xs border border-gray-800"
+        >
+          {btn}
+        </button>
+      ))}
+    </div>
+  );
+}
+📅 7. ECONOMIC CALENDAR
+components/CalendarWidget.tsx
+const events = [
+  { time: "14:15", event: "ADP Employment", impact: "HIGH" },
+  { time: "16:00", event: "ISM Services PMI", impact: "HIGH" }
+];
+
+export function CalendarWidget() {
+  return (
+    <div className="bg-[#111827] p-4 rounded-xl border border-gray-800">
+      <h2 className="text-sm text-gray-400">Economic Calendar</h2>
+
+      <div className="mt-3 space-y-2">
+        {events.map((e, i) => (
+          <div key={i} className="flex justify-between text-xs">
+            <span>{e.time}</span>
+            <span>{e.event}</span>
+            <span className="text-red-400">{e.impact}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+🧱 2. SUPABASE SCHEMA (PRODUCTION READY)
+SQL (paste into Supabase)
+-- USERS (handled by Supabase Auth)
+
+-- TRADES TABLE
+create table trades (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references auth.users(id),
+  symbol text,
+  direction text,
+  entry_price numeric,
+  exit_price numeric,
+  risk_percent numeric,
+  lot_size numeric,
+  setup_type text,
+  session text,
+  result text,
+  notes text,
+  screenshot_before text,
+  screenshot_after text,
+  created_at timestamp default now()
+);
+
+-- JOURNAL
+create table journal_entries (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references auth.users(id),
+  bias text,
+  macro_notes text,
+  liquidity_map text,
+  session text,
+  created_at timestamp default now()
+);
+
+-- CLIENTS CRM
+create table clients (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references auth.users(id),
+  name text,
+  business text,
+  phone text,
+  status text,
+  project_stage text,
+  payment_status text,
+  notes text,
+  created_at timestamp default now()
+);
+
+-- KNOWLEDGE VAULT
+create table knowledge_notes (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references auth.users(id),
+  category text,
+  title text,
+  content text,
+  tags text,
+  created_at timestamp default now()
+);
+
+-- CALENDAR
+create table calendar_events (
+  id uuid primary key default uuid_generate_v4(),
+  time text,
+  currency text,
+  event text,
+  impact text,
+  forecast text,
+  previous text,
+  actual text
+);
+🔌 3. API ROUTE (TRADES CRUD)
+app/api/trades/route.ts
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+// GET trades
+export async function GET() {
+  const { data, error } = await supabase.from("trades").select("*");
+  return Response.json({ data, error });
+}
+
+// POST trade
+export async function POST(req: Request) {
+  const body = await req.json();
+
+  const { data, error } = await supabase
+    .from("trades")
+    .insert([body]);
+
+  return Response.json({ data, error });
+}
+🚀 WHAT YOU NOW HA

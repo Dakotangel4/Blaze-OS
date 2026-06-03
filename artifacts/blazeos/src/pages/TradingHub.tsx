@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PriceTicker from "@/components/PriceTicker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -84,6 +85,9 @@ export default function TradingHub() {
 
   return (
     <div className="space-y-6">
+      <div className="-mx-4 md:-mx-8 -mt-4 md:-mt-8 mb-6">
+        <PriceTicker />
+      </div>
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center">
