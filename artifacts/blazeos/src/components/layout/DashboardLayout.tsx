@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { useClerk, useUser } from "@clerk/react";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   LayoutDashboard,
   TrendingUp,
@@ -32,9 +32,12 @@ const navItems = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
-  const { signOut } = useClerk();
-  const { user } = useUser();
+  const { user, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+  const displayEmail = user?.email || "";
+  const displayInitial = displayName.charAt(0).toUpperCase();
 
   const NavLinks = ({ onClick }: { onClick?: () => void }) => (
     <div className="flex flex-col gap-1 w-full">
@@ -66,7 +69,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Flame className="h-8 w-8 text-primary" />
           <span className="font-bold text-xl tracking-tight">BlazeOS</span>
         </div>
-        
+
         <nav className="flex-1 px-4 py-2 overflow-y-auto">
           <NavLinks />
         </nav>
@@ -74,17 +77,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="p-4 border-t border-border mt-auto">
           <div className="flex items-center gap-3 px-3 py-2 mb-2">
             <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
-              {user?.firstName?.charAt(0) || "U"}
+              {displayInitial}
             </div>
             <div className="flex flex-col overflow-hidden">
-              <span className="text-sm font-medium truncate">{user?.fullName || "User"}</span>
-              <span className="text-xs text-muted-foreground truncate">{user?.primaryEmailAddress?.emailAddress}</span>
+              <span className="text-sm font-medium truncate">{displayName}</span>
+              <span className="text-xs text-muted-foreground truncate">{displayEmail}</span>
             </div>
           </div>
           <Button
             variant="ghost"
             className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-            onClick={() => signOut({ redirectUrl: "/" })}
+            onClick={() => signOut()}
           >
             <LogOut className="mr-2 h-4 w-4" />
             Sign Out
@@ -117,7 +120,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <Button
                   variant="ghost"
                   className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => signOut({ redirectUrl: "/" })}
+                  onClick={() => signOut()}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign Out
