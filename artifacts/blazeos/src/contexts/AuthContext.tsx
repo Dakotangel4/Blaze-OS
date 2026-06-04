@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, useRef } from "react";
 import type { User, Session } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/utils/supabase/client";
+import { setAuthTokenGetter } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 type AuthContextType = {
@@ -15,6 +16,19 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   loading: true,
   signOut: async () => {},
+});
+
+/**
+ * Registers the Supabase access token getter with the API client so that
+ * every generated hook call automatically includes the Authorization header.
+ * Supabase's getSession() reads from in-memory cache and only hits the network
+ * when the token needs a refresh, so this has negligible performance overhead.
+ */
+setAuthTokenGetter(async () => {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return session?.access_token ?? null;
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {

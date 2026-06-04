@@ -22,17 +22,33 @@ const queryClient = new QueryClient();
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
+function AuthLoadingScreen() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative h-10 w-10">
+          <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
+          <div className="absolute inset-0 rounded-full border-2 border-t-primary animate-spin" />
+        </div>
+        <p className="text-xs font-mono text-muted-foreground tracking-widest uppercase">
+          Verifying session…
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function HomeRedirect() {
   const { user, loading } = useAuth();
-  if (loading) return null;
+  if (loading) return <AuthLoadingScreen />;
   if (user) return <Redirect to="/dashboard" />;
   return <Landing />;
 }
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { user, loading } = useAuth();
-  if (loading) return null;
-  if (!user) return <Redirect to="/sign-in" />;
+  if (loading) return <AuthLoadingScreen />;
+  if (!user) return <Redirect to="/login" />;
   return (
     <DashboardLayout>
       <Component />
@@ -42,7 +58,7 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 
 function AuthRoute({ component: Component }: { component: React.ComponentType }) {
   const { user, loading } = useAuth();
-  if (loading) return null;
+  if (loading) return <AuthLoadingScreen />;
   if (user) return <Redirect to="/dashboard" />;
   return <Component />;
 }
@@ -51,13 +67,19 @@ function AppRoutes() {
   return (
     <Switch>
       <Route path="/" component={HomeRedirect} />
+
+      {/* Auth routes — /login is the canonical path; /sign-in and /sign-up kept for compatibility */}
+      <Route path="/login"><AuthRoute component={SignInPage} /></Route>
       <Route path="/sign-in"><AuthRoute component={SignInPage} /></Route>
       <Route path="/sign-up"><AuthRoute component={SignUpPage} /></Route>
 
+      {/* Protected routes */}
       <Route path="/dashboard"><ProtectedRoute component={Dashboard} /></Route>
       <Route path="/trading"><ProtectedRoute component={TradingHub} /></Route>
+      <Route path="/trading-hub"><ProtectedRoute component={TradingHub} /></Route>
       <Route path="/risk"><ProtectedRoute component={RiskCalculator} /></Route>
       <Route path="/knowledge"><ProtectedRoute component={KnowledgeVault} /></Route>
+      <Route path="/knowledge-vault"><ProtectedRoute component={KnowledgeVault} /></Route>
       <Route path="/crm"><ProtectedRoute component={CRM} /></Route>
       <Route path="/calendar"><ProtectedRoute component={EconomicCalendar} /></Route>
       <Route path="/ai"><ProtectedRoute component={AICenter} /></Route>
