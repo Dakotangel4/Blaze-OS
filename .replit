@@ -220,3 +220,4 @@ channel = "stable-25_05"
 [userenv.shared]
 SUPABASE_URL = "https://zlizxldttghilrwjyidr.supabase.co"
 BASE_PATH = "/"
+VITE_SUPABASE_URL = "https://zlizxldttghilrwjyidr.supabase.co"
