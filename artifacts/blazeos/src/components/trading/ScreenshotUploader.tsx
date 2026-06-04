@@ -62,7 +62,7 @@ export function ScreenshotUploader({ tradeId, symbol, imageType, existing, onUpl
       const objectUrl = URL.createObjectURL(file);
       setPreview(objectUrl);
       try {
-        const s = await upload(file, tradeId, imageType, symbol);
+        const s = await upload(file, tradeId, imageType);
         if (s) {
           setUploadedScreenshot(s);
           onUploaded(s);
@@ -85,7 +85,7 @@ export function ScreenshotUploader({ tradeId, symbol, imageType, existing, onUpl
         URL.revokeObjectURL(objectUrl);
       }
     },
-    [upload, tradeId, imageType, symbol, config.title, onUploaded, toast]
+    [upload, tradeId, imageType, config.title, onUploaded, toast]
   );
 
   const handleDrop = useCallback(

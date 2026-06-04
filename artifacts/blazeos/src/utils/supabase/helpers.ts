@@ -1,35 +1,29 @@
-/**
- * Auth helpers — now uses Replit Auth (session cookies).
- * The supabase-based helpers are replaced with fetch-based equivalents.
- */
+import { supabase } from "./client";
 
-export async function getCurrentUser(): Promise<{ id: string } | null> {
-  try {
-    const res = await fetch("/api/auth/user", { credentials: "include" });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
+export async function getCurrentUser() {
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
 }
 
-export async function requireAuth(): Promise<{ id: string }> {
+export async function requireAuth() {
   const user = await getCurrentUser();
   if (!user) {
-    window.location.href = "/api/login";
+    window.location.href = "/sign-in";
     throw new Error("Authentication required.");
   }
   return user;
 }
 
 export async function signOut(): Promise<void> {
-  window.location.href = "/api/logout";
+  await supabase.auth.signOut();
 }
 
-export async function getSession(): Promise<null> {
-  return null;
+export async function getSession() {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session;
 }
 
-export async function getAccessToken(): Promise<null> {
-  return null;
+export async function getAccessToken(): Promise<string | null> {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token ?? null;
 }

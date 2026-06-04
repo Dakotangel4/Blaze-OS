@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
+import { supabase } from "@/utils/supabase/client";
+import { getAuthHeaders } from "@/utils/supabase/server";
 
-const BUCKET = "trade-screenshots";
+export const SCREENSHOTS_BUCKET = "trade-screenshots";
 
 export type Screenshot = {
   id: number;
@@ -12,6 +14,14 @@ export type Screenshot = {
   createdAt: string;
 };
 
+async function authFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  const headers = await getAuthHeaders();
+  return fetch(url, {
+    ...options,
+    headers: { ...headers, ...(options.headers as Record<string, string> | undefined) },
+  });
+}
+
 export function useTradeScreenshots(tradeId: number | null) {
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,13 +30,8 @@ export function useTradeScreenshots(tradeId: number | null) {
     if (!tradeId) return;
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/trade-screenshots?tradeId=${tradeId}`, {
-        credentials: "include",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setScreenshots(data);
-      }
+      const res = await authFetch(`/api/trade-screenshots?tradeId=${tradeId}`);
+      if (res.ok) setScreenshots(await res.json());
     } finally {
       setIsLoading(false);
     }
@@ -48,41 +53,54 @@ export function useUploadScreenshot() {
       file: File,
       tradeId: number,
       imageType: "before" | "during" | "after",
-      symbol: string
     ): Promise<Screenshot | null> => {
       setIsUploading(true);
-      setProgress(0);
+      setProgress(10);
       try {
-        setProgress(20);
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) throw new Error("Not authenticated");
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("tradeId", String(tradeId));
-        formData.append("imageType", imageType);
-        formData.append("symbol", symbol);
+        const ext = file.name.split(".").pop() ?? "png";
+        const storagePath = `${user.id}/${tradeId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-        setProgress(50);
+        setProgress(30);
 
-        const uploadRes = await fetch("/api/trade-screenshots/upload", {
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from(SCREENSHOTS_BUCKET)
+          .upload(storagePath, file, { cacheControl: "3600", upsert: false });
+
+        if (uploadError) throw new Error(uploadError.message);
+        setProgress(70);
+
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from(SCREENSHOTS_BUCKET).getPublicUrl(uploadData.path);
+
+        const res = await authFetch("/api/trade-screenshots", {
           method: "POST",
-          credentials: "include",
-          body: formData,
+          body: JSON.stringify({
+            tradeId,
+            imageUrl: publicUrl,
+            imagePath: uploadData.path,
+            imageType,
+          }),
         });
 
-        if (!uploadRes.ok) {
-          const err = await uploadRes.json().catch(() => ({}));
-          throw new Error((err as { error?: string }).error ?? "Upload failed");
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error((err as { error?: string }).error ?? "Failed to save screenshot");
         }
 
-        const screenshot: Screenshot = await uploadRes.json();
         setProgress(100);
-        return screenshot;
+        return res.json();
       } finally {
         setIsUploading(false);
         setTimeout(() => setProgress(0), 1000);
       }
     },
-    []
+    [],
   );
 
   return { upload, isUploading, progress };
@@ -91,21 +109,17 @@ export function useUploadScreenshot() {
 export function useDeleteScreenshot() {
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const deleteScreenshot = useCallback(
-    async (screenshot: Screenshot): Promise<boolean> => {
-      setIsDeleting(true);
-      try {
-        const res = await fetch(`/api/trade-screenshots/${screenshot.id}`, {
-          method: "DELETE",
-          credentials: "include",
-        });
-        return res.ok || res.status === 204;
-      } finally {
-        setIsDeleting(false);
-      }
-    },
-    []
-  );
+  const deleteScreenshot = useCallback(async (screenshot: Screenshot): Promise<boolean> => {
+    setIsDeleting(true);
+    try {
+      const res = await authFetch(`/api/trade-screenshots/${screenshot.id}`, {
+        method: "DELETE",
+      });
+      return res.ok || res.status === 204;
+    } finally {
+      setIsDeleting(false);
+    }
+  }, []);
 
   return { deleteScreenshot, isDeleting };
 }

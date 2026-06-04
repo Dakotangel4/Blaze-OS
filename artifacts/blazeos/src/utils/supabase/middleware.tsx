@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 
-export function useRequireAuth(redirectTo = "/api/login"): boolean {
+export function useRequireAuth(redirectTo = "/sign-in"): boolean {
   const { user, loading } = useAuth();
   const [, navigate] = useLocation();
 
@@ -17,7 +17,7 @@ export function useRequireAuth(redirectTo = "/api/login"): boolean {
 
 export function withAuth<P extends object>(
   Component: React.ComponentType<P>,
-  redirectTo = "/api/login",
+  redirectTo = "/sign-in",
 ): React.FC<P> {
   function AuthProtected(props: P) {
     const loading = useRequireAuth(redirectTo);

@@ -4,21 +4,23 @@
  * Validates that the Postgres database is reachable, the schema
  * is fully applied (all expected tables exist), and basic queries
  * succeed.  Exits 1 with a human-readable report if anything fails.
+ *
+ * Note: The `sessions` table is no longer required — Supabase Auth
+ * manages sessions in its own backend (no local session store needed).
  */
 
 import pg from "pg";
 
 const { Client } = pg;
 
-const RED   = "\x1b[31m";
-const GREEN = "\x1b[32m";
+const RED    = "\x1b[31m";
+const GREEN  = "\x1b[32m";
 const YELLOW = "\x1b[33m";
-const DIM   = "\x1b[2m";
-const BOLD  = "\x1b[1m";
-const RESET = "\x1b[0m";
+const DIM    = "\x1b[2m";
+const BOLD   = "\x1b[1m";
+const RESET  = "\x1b[0m";
 
 const REQUIRED_TABLES = [
-  "sessions",
   "users",
   "trades",
   "clients",
@@ -39,7 +41,6 @@ async function run() {
     process.exit(1);
   }
 
-  // ── 1. Connect ─────────────────────────────────────────────────────────
   const client = new Client({ connectionString: url });
   const t0 = Date.now();
 
@@ -57,12 +58,12 @@ async function run() {
   let failed = false;
 
   try {
-    // ── 2. Ping ────────────────────────────────────────────────────────────
+    // ── 1. Ping ────────────────────────────────────────────────────────────
     const pingT = Date.now();
     await client.query("SELECT 1");
     console.log(`  ${GREEN}✓${RESET} Ping ok ${DIM}(${Date.now() - pingT}ms)${RESET}`);
 
-    // ── 3. Check tables exist ──────────────────────────────────────────────
+    // ── 2. Check tables exist ──────────────────────────────────────────────
     console.log(`\n  Checking schema tables:`);
 
     const { rows } = await client.query<{ table_name: string }>(
@@ -84,15 +85,19 @@ async function run() {
       }
     }
 
+    if (existing.has("sessions")) {
+      console.log(`    ${YELLOW}⚠${RESET}  sessions              ${DIM}present (no longer used — Supabase manages sessions)${RESET}`);
+    }
+
     if (missing.length > 0) {
       console.log(`\n  ${RED}${BOLD}Missing tables: ${missing.join(", ")}${RESET}`);
       console.log(`  ${YELLOW}Run: pnpm --filter @workspace/db run push${RESET}\n`);
     }
 
-    // ── 4. Row-count spot check ────────────────────────────────────────────
+    // ── 3. Row-count spot check ────────────────────────────────────────────
     if (!failed) {
       console.log(`\n  Row-count spot checks:`);
-      const tables = ["users", "sessions", "user_settings"];
+      const tables = ["users", "trades", "user_settings"];
       for (const t of tables) {
         const { rows: countRows } = await client.query<{ count: string }>(
           `SELECT COUNT(*)::text AS count FROM "${t}"`,
@@ -101,29 +106,6 @@ async function run() {
         console.log(`    ${GREEN}✓${RESET} ${t.padEnd(20)} ${DIM}${count} row(s)${RESET}`);
       }
     }
-
-    // ── 5. Session table has correct column types ──────────────────────────
-    const { rows: cols } = await client.query<{
-      column_name: string;
-      data_type: string;
-    }>(
-      `SELECT column_name, data_type
-       FROM information_schema.columns
-       WHERE table_name = 'sessions' AND table_schema = 'public'`,
-    );
-    const colMap = Object.fromEntries(cols.map((c) => [c.column_name, c.data_type]));
-    const hasSid  = "sid"    in colMap;
-    const hasSess = "sess"   in colMap;
-    const hasExp  = "expire" in colMap;
-
-    if (hasSid && hasSess && hasExp) {
-      console.log(`\n  ${GREEN}✓${RESET} sessions table schema is correct`);
-    } else {
-      console.log(`\n  ${RED}✗ sessions table schema is incorrect:${RESET}`);
-      console.log(`    ${DIM}Found columns: ${Object.keys(colMap).join(", ")}${RESET}`);
-      failed = true;
-    }
-
   } finally {
     await client.end().catch(() => {});
   }

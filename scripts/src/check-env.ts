@@ -2,25 +2,46 @@
  * BlazeOS — Environment Variable Gate
  *
  * Validates that every env var required to start the API server and run
- * auth/database operations is present.  Exits 1 with a human-readable
- * error report if anything is missing.
+ * Supabase Auth + database operations is present. Exits 1 with a human-
+ * readable error report if anything is missing.
+ *
+ * Auth provider: Supabase Auth (portable — works on any platform)
+ * Storage:       Supabase Storage
+ * Database:      PostgreSQL (connection string via DATABASE_URL)
  */
 
 interface EnvRule {
   key: string;
   description: string;
-  /** When true the check is advisory only (warns but doesn't fail). */
   advisory?: boolean;
 }
 
 const REQUIRED: EnvRule[] = [
-  { key: "DATABASE_URL",   description: "PostgreSQL connection string (Replit DB)" },
-  { key: "SESSION_SECRET", description: "Express-session signing secret (Replit Auth)" },
-  { key: "REPL_ID",        description: "Replit Repl identifier (OIDC client_id)" },
+  {
+    key: "DATABASE_URL",
+    description: "PostgreSQL connection string",
+  },
+  {
+    key: "SUPABASE_URL",
+    description: "Supabase project URL (e.g. https://xyz.supabase.co)",
+  },
+  {
+    key: "SUPABASE_SERVICE_ROLE_KEY",
+    description: "Supabase service-role key — backend JWT verification (never expose to browser)",
+  },
 ];
 
 const ADVISORY: EnvRule[] = [
-  { key: "REPLIT_DOMAINS", description: "Replit proxy domains (auto-injected in Replit environment)", advisory: true },
+  {
+    key: "VITE_SUPABASE_URL",
+    description: "Supabase URL baked into Vite frontend bundle (public — safe to ship in browser)",
+    advisory: true,
+  },
+  {
+    key: "VITE_SUPABASE_ANON_KEY",
+    description: "Supabase anon key baked into Vite bundle (public by design — protected by RLS)",
+    advisory: true,
+  },
 ];
 
 const RED    = "\x1b[31m";
@@ -51,11 +72,11 @@ function run() {
   const { missing: advisoryMissing } = check(ADVISORY);
 
   for (const r of requiredPresent) {
-    console.log(`  ${GREEN}✓${RESET} ${r.key.padEnd(22)} ${DIM}${r.description}${RESET}`);
+    console.log(`  ${GREEN}✓${RESET} ${r.key.padEnd(28)} ${DIM}${r.description}${RESET}`);
   }
 
   for (const r of advisoryMissing) {
-    console.log(`  ${YELLOW}⚠${RESET} ${r.key.padEnd(22)} ${DIM}missing (advisory) — ${r.description}${RESET}`);
+    console.log(`  ${YELLOW}⚠${RESET}  ${r.key.padEnd(27)} ${DIM}missing (advisory) — ${r.description}${RESET}`);
   }
 
   if (requiredMissing.length > 0) {
@@ -63,7 +84,9 @@ function run() {
     for (const r of requiredMissing) {
       console.log(`    ${RED}•${RESET} ${BOLD}${r.key}${RESET} — ${r.description}`);
     }
-    console.log(`\n  Set these in Replit's Secrets panel before deploying.\n`);
+    console.log(
+      `\n  Set these in your platform's secrets panel (Replit Secrets, Railway Variables, etc.) before deploying.\n`,
+    );
     process.exit(1);
   }
 
@@ -74,16 +97,16 @@ function run() {
     console.log(`    Got: ${dbUrl.slice(0, 30)}…\n`);
     process.exit(1);
   }
-  console.log(`  ${GREEN}✓${RESET} DATABASE_URL format          ${DIM}valid postgres:// URI${RESET}`);
+  console.log(`  ${GREEN}✓${RESET} DATABASE_URL format              ${DIM}valid postgres:// URI${RESET}`);
 
-  // SESSION_SECRET length check (should be at least 32 chars for security)
-  const secret = process.env["SESSION_SECRET"]!;
-  if (secret.length < 32) {
-    console.log(`\n  ${RED}✗ SESSION_SECRET is too short (${secret.length} chars, minimum 32)${RESET}`);
-    console.log(`    Regenerate with: openssl rand -base64 48\n`);
+  // Validate SUPABASE_URL format
+  const supabaseUrl = process.env["SUPABASE_URL"]!;
+  if (!supabaseUrl.startsWith("https://")) {
+    console.log(`\n  ${RED}✗ SUPABASE_URL must start with https://${RESET}`);
+    console.log(`    Got: ${supabaseUrl.slice(0, 30)}…\n`);
     process.exit(1);
   }
-  console.log(`  ${GREEN}✓${RESET} SESSION_SECRET length        ${DIM}${secret.length} chars (≥32 required)${RESET}`);
+  console.log(`  ${GREEN}✓${RESET} SUPABASE_URL format              ${DIM}valid https:// URL${RESET}`);
 
   console.log(`\n  ${GREEN}${BOLD}All required environment variables are present.${RESET}\n`);
 }

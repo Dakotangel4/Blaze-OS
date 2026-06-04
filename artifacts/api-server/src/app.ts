@@ -3,7 +3,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
-import { setupAuth, isAuthenticated } from "./utils/replitAuth";
+import { isAuthenticated } from "./utils/supabaseAuth";
 
 const app: Express = express();
 
@@ -32,24 +32,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 export async function createApp(): Promise<Express> {
-  await setupAuth(app);
-
   app.get("/api/auth/user", isAuthenticated, async (req, res) => {
-    const user = req.user as Record<string, unknown>;
-    const claims = user["claims"] as Record<string, unknown>;
-    res.json({
-      id: claims["sub"],
-      email: claims["email"],
-      firstName: claims["first_name"],
-      lastName: claims["last_name"],
-      profileImageUrl: claims["profile_image_url"],
-    });
+    const user = req.supabaseUser!;
+    res.json({ id: user.id, email: user.email ?? null });
   });
 
   app.use("/api", (req, res, next) => {
-    if (req.path === "/healthz" || req.path === "/login" || req.path === "/callback" || req.path === "/logout") {
-      return next();
-    }
+    if (req.path === "/healthz") return next();
     return isAuthenticated(req, res, next);
   });
 
