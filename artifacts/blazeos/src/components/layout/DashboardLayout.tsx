@@ -194,7 +194,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { user, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "User";
+  const displayName =
+    (user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`.trim()
+      : user?.firstName || user?.email?.split("@")[0]) || "User";
   const displayEmail = user?.email || "";
   const displayInitial = displayName.charAt(0).toUpperCase();
 

@@ -1,4 +1,4 @@
 - [BlazeOS API proxy](blazeos-api-proxy.md) — Vite dev server needs `/api` proxy to port 8080; not pre-configured, must be added to vite.config.ts.
 - [API server zod](api-server-zod.md) — api-server uses @workspace/api-zod for validation, never direct `zod` import; esbuild won't resolve bare `zod` in that package.
-- [Supabase SSR Architecture](supabase-ssr-arch.md) — Next.js SSR patterns adapted for Vite SPA + Express; token flow, env var names, health route is `/healthz` not `/health`.
+- [Replit Auth migration](replit-auth-migration.md) — Replaced Supabase Auth with Replit Auth (OIDC/passport); session stored in DB sessions table; users table in lib/db/src/schema/auth.ts.
 - [AI Command Center architecture](ai-command-center.md) — AI keys stored in DB, backend proxies all provider calls; cast AI result via `unknown` before union type to avoid TS2352.

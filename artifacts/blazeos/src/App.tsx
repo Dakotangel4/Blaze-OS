@@ -18,8 +18,6 @@ import Execution from "@/pages/Execution";
 import Analytics from "@/pages/Analytics";
 import PropFirmTracker from "@/pages/PropFirmTracker";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import SignInPage from "@/pages/SignIn";
-import SignUpPage from "@/pages/SignUp";
 
 const queryClient = new QueryClient();
 
@@ -51,7 +49,10 @@ function HomeRedirect() {
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { user, loading } = useAuth();
   if (loading) return <AuthLoadingScreen />;
-  if (!user) return <Redirect to="/login" />;
+  if (!user) {
+    window.location.href = "/api/login";
+    return <AuthLoadingScreen />;
+  }
   return (
     <DashboardLayout>
       <ErrorBoundary pageName={Component.displayName ?? Component.name}>
@@ -61,24 +62,11 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
   );
 }
 
-function AuthRoute({ component: Component }: { component: React.ComponentType }) {
-  const { user, loading } = useAuth();
-  if (loading) return <AuthLoadingScreen />;
-  if (user) return <Redirect to="/dashboard" />;
-  return <Component />;
-}
-
 function AppRoutes() {
   return (
     <Switch>
       <Route path="/" component={HomeRedirect} />
 
-      {/* Auth routes — /login is the canonical path; /sign-in and /sign-up kept for compatibility */}
-      <Route path="/login"><AuthRoute component={SignInPage} /></Route>
-      <Route path="/sign-in"><AuthRoute component={SignInPage} /></Route>
-      <Route path="/sign-up"><AuthRoute component={SignUpPage} /></Route>
-
-      {/* Protected routes */}
       <Route path="/dashboard"><ProtectedRoute component={Dashboard} /></Route>
       <Route path="/trading"><ProtectedRoute component={TradingHub} /></Route>
       <Route path="/trading-hub"><ProtectedRoute component={TradingHub} /></Route>

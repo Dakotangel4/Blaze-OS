@@ -1,22 +1,25 @@
-import { createBrowserClient } from "@supabase/ssr";
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Missing Supabase environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are required.",
-  );
-}
-
 /**
- * Creates a Supabase browser client using @supabase/ssr.
- * Uses cookie-based session storage for improved security over localStorage.
- * createBrowserClient internally deduplicates clients with the same URL+key,
- * so calling this multiple times is safe and returns the same instance.
+ * Stub Supabase client for backward compatibility during auth migration.
+ * Authentication is now handled via Replit Auth (session cookies).
+ * This file is kept to avoid breaking imports that haven't been updated yet.
  */
-export function createClient() {
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
-}
 
-export const supabase = createClient();
+export const supabase = {
+  auth: {
+    getSession: async () => ({ data: { session: null }, error: null }),
+    getUser: async () => ({ data: { user: null }, error: null }),
+    signOut: async () => {},
+    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+  },
+  storage: {
+    from: () => ({
+      upload: async () => ({ error: new Error("Storage not available") }),
+      getPublicUrl: () => ({ data: { publicUrl: "" } }),
+      remove: async () => ({ error: null }),
+    }),
+  },
+};
+
+export function createClient() {
+  return supabase;
+}

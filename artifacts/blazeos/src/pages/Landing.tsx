@@ -485,12 +485,12 @@ function Nav() {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <Link href="/sign-in">
+          <Link href="/api/login">
             <button className="text-sm text-white/50 hover:text-white transition-colors px-3 py-1.5">
               Sign In
             </button>
           </Link>
-          <Link href="/sign-up">
+          <Link href="/api/login">
             <button className="h-9 px-5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold transition-all active:scale-95">
               Get Started
             </button>
@@ -544,13 +544,13 @@ function Hero() {
             </p>
 
             <div className="fade-up-4 flex flex-col sm:flex-row items-center justify-center xl:justify-start gap-3 mb-12">
-              <Link href="/sign-up">
+              <Link href="/api/login">
                 <button className="group h-12 px-7 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm transition-all active:scale-95 flex items-center gap-2 shadow-[0_0_40px_rgba(255,128,0,0.25)] hover:shadow-[0_0_56px_rgba(255,128,0,0.4)]">
                   Start Free Today
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                 </button>
               </Link>
-              <Link href="/sign-in">
+              <Link href="/api/login">
                 <button className="h-12 px-7 rounded-xl border border-white/[0.1] hover:border-white/20 text-white/60 hover:text-white text-sm font-medium transition-all bg-white/[0.02] hover:bg-white/[0.05]">
                   Sign into your account
                 </button>
@@ -667,7 +667,7 @@ function ModulesSection() {
                   </li>
                 ))}
               </ul>
-              <Link href="/sign-up">
+              <Link href="/api/login">
                 <button className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors group">
                   Try {mod.badge.split(" ")[0].charAt(0) + mod.badge.slice(1).toLowerCase().split(" ")[0].slice(0)} now
                   <ChevronRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
@@ -746,13 +746,13 @@ function CtaSection() {
             Join thousands of traders who use BlazeOS to stay organized, stay profitable, and stop leaving money on the table.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link href="/sign-up">
+            <Link href="/api/login">
               <button className="group h-13 px-8 py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base transition-all active:scale-95 flex items-center gap-2 shadow-[0_0_60px_rgba(255,128,0,0.3)] hover:shadow-[0_0_80px_rgba(255,128,0,0.45)]">
                 Initialize Your System
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </Link>
-            <Link href="/sign-in">
+            <Link href="/api/login">
               <button className="h-13 px-8 py-3.5 rounded-xl border border-white/[0.1] hover:border-white/20 text-white/50 hover:text-white text-base transition-all bg-transparent hover:bg-white/[0.03]">
                 Already a member
               </button>

@@ -3,7 +3,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
-import { requireAuth } from "./middlewares/auth";
+import { setupAuth, isAuthenticated } from "./utils/replitAuth";
 
 const app: Express = express();
 
@@ -31,16 +31,31 @@ app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/**
- * Auth middleware — applied to all /api routes except /api/health.
- * Every request must include a valid Supabase JWT in the Authorization header.
- * The authenticated User is attached to req.user for use in route handlers.
- */
-app.use("/api", (req, res, next) => {
-  if (req.path === "/healthz") return next();
-  return requireAuth(req, res, next);
-});
+export async function createApp(): Promise<Express> {
+  await setupAuth(app);
 
-app.use("/api", router);
+  app.get("/api/auth/user", isAuthenticated, async (req, res) => {
+    const user = req.user as Record<string, unknown>;
+    const claims = user["claims"] as Record<string, unknown>;
+    res.json({
+      id: claims["sub"],
+      email: claims["email"],
+      firstName: claims["first_name"],
+      lastName: claims["last_name"],
+      profileImageUrl: claims["profile_image_url"],
+    });
+  });
+
+  app.use("/api", (req, res, next) => {
+    if (req.path === "/healthz" || req.path === "/login" || req.path === "/callback" || req.path === "/logout") {
+      return next();
+    }
+    return isAuthenticated(req, res, next);
+  });
+
+  app.use("/api", router);
+
+  return app;
+}
 
 export default app;
