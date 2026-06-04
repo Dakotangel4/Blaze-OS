@@ -54,16 +54,43 @@ export default defineConfig({
     dedupe: ["react", "react-dom"],
   },
   root: path.resolve(import.meta.dirname),
+  esbuild: {
+    drop: ["debugger"],
+    legalComments: "none",
+  },
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
     target: "es2020",
     chunkSizeWarningLimit: 600,
+    modulePreload: {
+      polyfill: true,
+    },
     rollupOptions: {
       output: {
+        chunkFileNames: "assets/[name]-[hash].js",
+        entryFileNames: "assets/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash][extname]",
         manualChunks(id) {
+          // ── Workspace packages (API client + generated Zod schemas) ─────
+          // These live outside node_modules; give them a stable named chunk
+          // so the hash only changes when the API schema changes.
+          if (
+            id.includes("/api-client-react/") ||
+            id.includes("/api-zod/") ||
+            id.includes("@workspace/api-client-react") ||
+            id.includes("@workspace/api-zod")
+          ) {
+            return "app-api";
+          }
+
+          // ── Third-party vendor chunks ────────────────────────────────────
+          // All node_modules below are split into named, long-lived chunks.
+          // Their content hash changes only when the library version changes,
+          // so browsers can cache them indefinitely between app deployments.
           if (!id.includes("node_modules")) return;
 
+          // React runtime (react, react-dom, react-is, scheduler)
           if (
             id.includes("/react/") ||
             id.includes("/react-dom/") ||
@@ -73,14 +100,17 @@ export default defineConfig({
             return "vendor-react";
           }
 
+          // Data-fetching layer
           if (id.includes("@tanstack/")) {
             return "vendor-query";
           }
 
+          // Supabase SDK (auth + storage)
           if (id.includes("@supabase/")) {
             return "vendor-supabase";
           }
 
+          // Charting stack (recharts + d3 — intentionally large, lazy-only)
           if (
             id.includes("/recharts/") ||
             id.includes("/d3-") ||
@@ -90,18 +120,22 @@ export default defineConfig({
             return "vendor-charts";
           }
 
+          // Animation
           if (id.includes("/framer-motion/")) {
             return "vendor-motion";
           }
 
+          // Radix UI primitives
           if (id.includes("@radix-ui/")) {
             return "vendor-ui";
           }
 
+          // Icon sets
           if (id.includes("/lucide-react/") || id.includes("/react-icons/")) {
             return "vendor-icons";
           }
 
+          // General utilities (date-fns, clsx, wouter, react-hook-form, etc.)
           if (
             id.includes("/date-fns/") ||
             id.includes("/clsx/") ||

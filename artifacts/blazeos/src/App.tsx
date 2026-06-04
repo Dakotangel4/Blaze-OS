@@ -46,8 +46,7 @@ function SupabaseConfigError() {
   );
 }
 
-import Landing from "@/pages/Landing";
-
+const Landing = lazy(() => import("@/pages/Landing"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const TradingHub = lazy(() => import("@/pages/TradingHub"));
 const Journal = lazy(() => import("@/pages/Journal"));
@@ -92,7 +91,11 @@ function HomeRedirect() {
   const { user, loading } = useAuth();
   if (loading) return <AuthLoadingScreen />;
   if (user) return <Redirect to="/dashboard" />;
-  return <Landing />;
+  return (
+    <Suspense fallback={<AuthLoadingScreen />}>
+      <Landing />
+    </Suspense>
+  );
 }
 
 function ProtectedRoute({
