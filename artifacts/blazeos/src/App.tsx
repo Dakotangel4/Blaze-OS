@@ -1,25 +1,74 @@
+import { lazy, Suspense } from "react";
 import { Switch, Route, Redirect, Router as WouterRouter } from "wouter";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import Landing from "@/pages/Landing";
-import Dashboard from "@/pages/Dashboard";
-import TradingHub from "@/pages/TradingHub";
-import RiskCalculator from "@/pages/RiskCalculator";
-import KnowledgeVault from "@/pages/KnowledgeVault";
-import EconomicCalendar from "@/pages/EconomicCalendar";
-import AICenter from "@/pages/AICenter";
-import Settings from "@/pages/Settings";
-import Journal from "@/pages/Journal";
-import Execution from "@/pages/Execution";
-import Analytics from "@/pages/Analytics";
-import PropFirmTracker from "@/pages/PropFirmTracker";
+import { PageLoader, type PageLoaderVariant } from "@/components/ui/page-loader";
+import { supabaseConfigured } from "@/utils/supabase/client";
+
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
-const queryClient = new QueryClient();
+function SupabaseConfigError() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background text-foreground p-6">
+      <div className="max-w-md w-full rounded-xl border border-destructive/30 bg-destructive/10 p-8 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+          <span className="text-xs font-mono tracking-widest uppercase text-destructive">
+            Configuration Error
+          </span>
+        </div>
+        <h1 className="text-xl font-bold font-mono tracking-tight">
+          Supabase credentials missing
+        </h1>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          BlazeOS requires Supabase to handle authentication. Add the following
+          secrets in your project's Secrets panel, then restart the server:
+        </p>
+        <ul className="space-y-2">
+          {["VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY"].map((key) => (
+            <li
+              key={key}
+              className="flex items-center gap-2 rounded-md border border-white/[0.08] bg-black/30 px-3 py-2 font-mono text-xs text-white/70"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-yellow-400 shrink-0" />
+              {key}
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs text-muted-foreground font-mono">
+          Find these in your Supabase dashboard → Project Settings → API.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+import Landing from "@/pages/Landing";
+
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const TradingHub = lazy(() => import("@/pages/TradingHub"));
+const Journal = lazy(() => import("@/pages/Journal"));
+const RiskCalculator = lazy(() => import("@/pages/RiskCalculator"));
+const EconomicCalendar = lazy(() => import("@/pages/EconomicCalendar"));
+const Execution = lazy(() => import("@/pages/Execution"));
+const AICenter = lazy(() => import("@/pages/AICenter"));
+const KnowledgeVault = lazy(() => import("@/pages/KnowledgeVault"));
+const Analytics = lazy(() => import("@/pages/Analytics"));
+const PropFirmTracker = lazy(() => import("@/pages/PropFirmTracker"));
+const Settings = lazy(() => import("@/pages/Settings"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      gcTime: 5 * 60_000,
+      retry: 1,
+    },
+  },
+});
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -46,7 +95,15 @@ function HomeRedirect() {
   return <Landing />;
 }
 
-function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
+function ProtectedRoute({
+  component: Component,
+  label,
+  variant = "default",
+}: {
+  component: React.ElementType;
+  label: string;
+  variant?: PageLoaderVariant;
+}) {
   const { user, loading } = useAuth();
   if (loading) return <AuthLoadingScreen />;
   if (!user) {
@@ -55,8 +112,10 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
   }
   return (
     <DashboardLayout>
-      <ErrorBoundary pageName={Component.displayName ?? Component.name}>
-        <Component />
+      <ErrorBoundary pageName={label}>
+        <Suspense fallback={<PageLoader variant={variant} />}>
+          <Component />
+        </Suspense>
       </ErrorBoundary>
     </DashboardLayout>
   );
@@ -67,19 +126,45 @@ function AppRoutes() {
     <Switch>
       <Route path="/" component={HomeRedirect} />
 
-      <Route path="/dashboard"><ProtectedRoute component={Dashboard} /></Route>
-      <Route path="/trading"><ProtectedRoute component={TradingHub} /></Route>
-      <Route path="/trading-hub"><ProtectedRoute component={TradingHub} /></Route>
-      <Route path="/journal"><ProtectedRoute component={Journal} /></Route>
-      <Route path="/risk"><ProtectedRoute component={RiskCalculator} /></Route>
-      <Route path="/calendar"><ProtectedRoute component={EconomicCalendar} /></Route>
-      <Route path="/execution"><ProtectedRoute component={Execution} /></Route>
-      <Route path="/ai"><ProtectedRoute component={AICenter} /></Route>
-      <Route path="/knowledge"><ProtectedRoute component={KnowledgeVault} /></Route>
-      <Route path="/knowledge-vault"><ProtectedRoute component={KnowledgeVault} /></Route>
-      <Route path="/analytics"><ProtectedRoute component={Analytics} /></Route>
-      <Route path="/prop-firm"><ProtectedRoute component={PropFirmTracker} /></Route>
-      <Route path="/settings"><ProtectedRoute component={Settings} /></Route>
+      <Route path="/dashboard">
+        <ProtectedRoute component={Dashboard} label="Dashboard" variant="dashboard" />
+      </Route>
+      <Route path="/trading">
+        <ProtectedRoute component={TradingHub} label="Trading Hub" variant="trading" />
+      </Route>
+      <Route path="/trading-hub">
+        <ProtectedRoute component={TradingHub} label="Trading Hub" variant="trading" />
+      </Route>
+      <Route path="/journal">
+        <ProtectedRoute component={Journal} label="Journal" variant="table" />
+      </Route>
+      <Route path="/risk">
+        <ProtectedRoute component={RiskCalculator} label="Risk Calculator" />
+      </Route>
+      <Route path="/calendar">
+        <ProtectedRoute component={EconomicCalendar} label="Economic Calendar" />
+      </Route>
+      <Route path="/execution">
+        <ProtectedRoute component={Execution} label="Execution" variant="table" />
+      </Route>
+      <Route path="/ai">
+        <ProtectedRoute component={AICenter} label="AI Center" />
+      </Route>
+      <Route path="/knowledge">
+        <ProtectedRoute component={KnowledgeVault} label="Knowledge Vault" />
+      </Route>
+      <Route path="/knowledge-vault">
+        <ProtectedRoute component={KnowledgeVault} label="Knowledge Vault" />
+      </Route>
+      <Route path="/analytics">
+        <ProtectedRoute component={Analytics} label="Analytics" variant="table" />
+      </Route>
+      <Route path="/prop-firm">
+        <ProtectedRoute component={PropFirmTracker} label="Prop Firm Tracker" variant="table" />
+      </Route>
+      <Route path="/settings">
+        <ProtectedRoute component={Settings} label="Settings" />
+      </Route>
 
       <Route>
         <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
@@ -94,6 +179,9 @@ function AppRoutes() {
 }
 
 function App() {
+  if (!supabaseConfigured) {
+    return <SupabaseConfigError />;
+  }
   return (
     <WouterRouter base={basePath}>
       <QueryClientProvider client={queryClient}>

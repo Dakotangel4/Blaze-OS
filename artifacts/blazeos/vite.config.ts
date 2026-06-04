@@ -57,6 +57,66 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    target: "es2020",
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+
+          if (
+            id.includes("/react/") ||
+            id.includes("/react-dom/") ||
+            id.includes("/react-is/") ||
+            id.includes("/scheduler/")
+          ) {
+            return "vendor-react";
+          }
+
+          if (id.includes("@tanstack/")) {
+            return "vendor-query";
+          }
+
+          if (id.includes("@supabase/")) {
+            return "vendor-supabase";
+          }
+
+          if (
+            id.includes("/recharts/") ||
+            id.includes("/d3-") ||
+            id.includes("/d3/") ||
+            id.includes("/victory-")
+          ) {
+            return "vendor-charts";
+          }
+
+          if (id.includes("/framer-motion/")) {
+            return "vendor-motion";
+          }
+
+          if (id.includes("@radix-ui/")) {
+            return "vendor-ui";
+          }
+
+          if (id.includes("/lucide-react/") || id.includes("/react-icons/")) {
+            return "vendor-icons";
+          }
+
+          if (
+            id.includes("/date-fns/") ||
+            id.includes("/clsx/") ||
+            id.includes("/tailwind-merge/") ||
+            id.includes("/class-variance-authority/") ||
+            id.includes("/cmdk/") ||
+            id.includes("/sonner/") ||
+            id.includes("/wouter/") ||
+            id.includes("/@hookform/")
+          ) {
+            return "vendor-utils";
+          }
+        },
+      },
+    },
   },
   server: {
     port,
