@@ -1,0 +1,349 @@
+Refactor the BlazeOS navigation and information architecture to focus entirely on forex trading, performance tracking, execution, journaling, and market analysis.
+
+GOAL
+
+Transform BlazeOS from a mixed business/trading dashboard into a professional trader operating system.
+
+Remove unnecessary business-oriented navigation items and restructure the platform around a trader's workflow.
+
+NEW NAVIGATION STRUCTURE
+
+Dashboard
+
+Trading
+├── Trading Hub
+├── Journal
+├── Risk Calculator
+├── Calendar
+├── Execution
+
+Analysis
+├── AI Center
+├── Knowledge Vault
+
+Performance
+├── Analytics
+├── Prop Firm Tracker
+
+System
+├── Settings
+
+--------------------------------------------------
+
+DASHBOARD
+
+The Dashboard should become the command center.
+
+Display:
+
+- Today's Market Bias
+- Upcoming High Impact News
+- Account Equity
+- Daily P/L
+- Weekly P/L
+- Win Rate
+- Current Drawdown
+- Prop Firm Progress
+- Active Trades
+- Session Countdown
+
+Quick Actions:
+
+- New Trade
+- Add Journal Entry
+- Generate Daily Bias
+- Open Risk Calculator
+
+--------------------------------------------------
+
+TRADING HUB
+
+Purpose:
+
+Trade management and execution planning.
+
+Features:
+
+- Active Trades
+- Closed Trades
+- Trade History
+- Trade Notes
+- Screenshot Upload
+- Setup Classification
+- Session Tracking
+
+Categories:
+
+- XAUUSD
+- NAS100
+- BTCUSD
+- Forex Majors
+
+--------------------------------------------------
+
+JOURNAL
+
+Create a dedicated Journal module.
+
+Features:
+
+- Daily Journal
+- Weekly Review
+- Monthly Review
+- Psychology Notes
+- Lessons Learned
+- Mistake Tracking
+
+Metrics:
+
+- Emotional State
+- Execution Quality
+- Discipline Score
+
+--------------------------------------------------
+
+RISK CALCULATOR
+
+Features:
+
+- Position Size Calculator
+- Lot Size Calculator
+- Risk % Calculator
+- Prop Firm Risk Limits
+- Daily Drawdown Calculator
+
+Inputs:
+
+- Account Balance
+- Risk %
+- Stop Loss
+- Instrument
+
+Outputs:
+
+- Position Size
+- Dollar Risk
+- Maximum Exposure
+
+--------------------------------------------------
+
+CALENDAR
+
+Rename to:
+
+Economic Calendar
+
+Features:
+
+- High Impact Events
+- Medium Impact Events
+- Event Filters
+- Countdown Timers
+- Actual / Forecast / Previous
+
+Focus on:
+
+- USD
+- EUR
+- GBP
+
+News that impacts:
+
+- Gold
+- NAS100
+- USD
+
+--------------------------------------------------
+
+EXECUTION
+
+New Module
+
+Purpose:
+
+Daily trading preparation.
+
+Features:
+
+- Daily Bias
+- Weekly Bias
+- Liquidity Targets
+- Session Plans
+- Watchlist
+- Killzones
+- Trading Checklist
+
+Sections:
+
+London Session
+New York Session
+
+--------------------------------------------------
+
+AI CENTER
+
+Purpose:
+
+Institutional Intelligence Layer
+
+Tools:
+
+- Trade Analyzer
+- Daily Bias Generator
+- Journal Summary
+- Weekly Performance Review
+- Market Brief Generator
+
+Display:
+
+MODEL: BLAZE-V1-INSTITUTIONAL
+STATUS: READY
+
+--------------------------------------------------
+
+KNOWLEDGE VAULT
+
+Purpose:
+
+Private trading encyclopedia.
+
+Categories:
+
+- Forex
+- SMC
+- ICT
+- Macroeconomics
+- Trading Psychology
+- Risk Management
+- AI
+- Business
+
+Features:
+
+- Search
+- Tags
+- Categories
+- Markdown Support
+- File Uploads
+
+--------------------------------------------------
+
+ANALYTICS
+
+Replace Finance.
+
+Purpose:
+
+Trading Performance Analytics.
+
+Metrics:
+
+- Win Rate
+- Average RR
+- Profit Factor
+- Expectancy
+- Drawdown
+- Equity Curve
+- Monthly Returns
+- Best Session
+- Worst Session
+
+Charts:
+
+- Equity Curve
+- Win/Loss Distribution
+- Session Performance
+
+--------------------------------------------------
+
+PROP FIRM TRACKER
+
+Dedicated prop firm dashboard.
+
+Track:
+
+- Account Size
+- Daily Drawdown
+- Maximum Drawdown
+- Profit Target
+- Current Equity
+- Payout Eligibility
+
+Support:
+
+- FTMO
+- FundedNext
+- Goat Funded Trader
+- Custom Rules
+
+Visual Indicators:
+
+- Progress Bars
+- Risk Warnings
+- Rule Violations
+
+--------------------------------------------------
+
+SETTINGS
+
+Move all configuration here.
+
+Sections:
+
+- Profile
+- Appearance
+- Market Data
+- AI Providers
+- Authentication
+- Notifications
+
+Market Data:
+
+- Finnhub API Key
+- Connection Status
+- Test Connection
+
+AI Providers:
+
+- OpenAI
+- Claude
+- Perplexity
+
+--------------------------------------------------
+
+REMOVE OR REPLACE
+
+Remove:
+- CRM
+- Finance
+
+Replace:
+- Finance → Analytics
+
+Do not delete data structures immediately.
+Refactor them safely and preserve database integrity.
+
+--------------------------------------------------
+
+UI REQUIREMENTS
+
+Maintain the BlazeOS dark institutional trading terminal aesthetic.
+
+Style inspiration:
+
+- Bloomberg Terminal
+- TradingView
+- FTMO Dashboard
+- Modern Prop Firm Platforms
+
+Use:
+
+- Professional spacing
+- Clean typography
+- Smooth transitions
+- Responsive design
+- Sidebar groups with collapsible sections
+
+FINAL RESULT
+
+BlazeOS should feel like a professional trader operating system built specifically for XAUUSD, NAS100, BTC, and prop-firm traders rather than a generic business dashboard.
