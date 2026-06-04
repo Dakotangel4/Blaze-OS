@@ -8,6 +8,7 @@ import { Activity, TrendingUp, Users, Calendar as CalendarIcon, DollarSign, Targ
 import { useGetDashboardSummary, useGetDailyBias, useUpdateDailyBias, getGetDailyBiasQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { TodayEventsWidget } from "@/components/dashboard/TodayEventsWidget";
 
 export default function Dashboard() {
   const { data: summary, isLoading: isLoadingSummary } = useGetDashboardSummary();
@@ -231,6 +232,8 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      <TodayEventsWidget />
     </div>
   );
 }
