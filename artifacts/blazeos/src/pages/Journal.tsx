@@ -11,6 +11,7 @@ import {
   Calendar, ChevronDown, CheckCircle2, XCircle, Minus,
 } from "lucide-react";
 import { format } from "date-fns";
+import { safeFormat } from "@/lib/safeDate";
 import { useToast } from "@/hooks/use-toast";
 
 type JournalView = "daily" | "weekly" | "monthly" | "psychology";
@@ -344,7 +345,7 @@ export default function Journal() {
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <p className="text-sm font-semibold text-white/80 font-mono">
-                          {format(new Date(entry.date), "EEEE, MMMM d, yyyy")}
+                          {safeFormat(entry.date, "EEEE, MMMM d, yyyy")}
                         </p>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge className={`text-[10px] px-2 py-0.5 ${emotion?.color}`}>

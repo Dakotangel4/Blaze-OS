@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
+import { safeFormat } from "@/lib/safeDate";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useListTrades,
@@ -227,7 +228,7 @@ export default function TradingHub() {
                   {trades.map((trade) => (
                     <TableRow key={trade.id} className="group">
                       <TableCell className="font-mono text-xs text-muted-foreground">
-                        {format(new Date(trade.createdAt), "MMM d, HH:mm")}
+                        {safeFormat(trade.createdAt, "MMM d, HH:mm")}
                       </TableCell>
                       <TableCell className="font-bold text-sm">{trade.symbol}</TableCell>
                       <TableCell>

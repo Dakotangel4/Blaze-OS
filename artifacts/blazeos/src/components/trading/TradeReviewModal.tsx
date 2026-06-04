@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ScreenshotUploader } from "./ScreenshotUploader";
 import { useTradeScreenshots, useDeleteScreenshot, type Screenshot } from "@/hooks/useScreenshots";
 import { format } from "date-fns";
+import { safeFormat } from "@/lib/safeDate";
 import { cn } from "@/lib/utils";
 
 type ImageType = "before" | "during" | "after";
@@ -247,7 +248,7 @@ export function TradeReviewModal({ trade, open, onClose }: Props) {
                   </Badge>
                 </DialogTitle>
                 <p className="text-[10px] text-white/30 font-mono mt-0.5">
-                  {format(new Date(trade.createdAt), "MMM d, yyyy HH:mm")} · {trade.session}
+                  {safeFormat(trade.createdAt, "MMM d, yyyy HH:mm")} · {trade.session}
                 </p>
               </div>
             </div>

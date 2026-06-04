@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, ImagePlus, X, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Upload, ImagePlus, X, CheckCircle2, Loader2 } from "lucide-react";
 import { useUploadScreenshot, type Screenshot } from "@/hooks/useScreenshots";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";

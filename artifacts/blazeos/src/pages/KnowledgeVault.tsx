@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
+import { safeFormat } from "@/lib/safeDate";
 import { useQueryClient } from "@tanstack/react-query";
 import { 
   useListNotes, 
@@ -205,7 +206,7 @@ export default function KnowledgeVault() {
                       </div>
                       <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                         <Badge variant="secondary" className="text-[10px] px-1 py-0">{note.category}</Badge>
-                        <span>{format(new Date(note.createdAt), "MMM d")}</span>
+                        <span>{safeFormat(note.createdAt, "MMM d")}</span>
                       </div>
                     </div>
                   ))}
@@ -228,7 +229,7 @@ export default function KnowledgeVault() {
                   <div className="flex flex-wrap gap-2 items-center text-sm text-muted-foreground">
                     <span className="flex items-center gap-1"><Folder className="h-4 w-4" /> {selectedNote.category}</span>
                     <span>•</span>
-                    <span>Updated {format(new Date(selectedNote.updatedAt), "MMM d, yyyy")}</span>
+                    <span>Updated {safeFormat(selectedNote.updatedAt, "MMM d, yyyy")}</span>
                     {selectedNote.tags && (
                       <>
                         <span>•</span>

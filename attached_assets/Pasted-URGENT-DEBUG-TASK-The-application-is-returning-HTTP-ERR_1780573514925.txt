@@ -1,0 +1,166 @@
+URGENT DEBUG TASK
+
+The application is returning:
+
+HTTP ERROR 502
+
+The Replit deployment URL loads a blank page and displays:
+
+"This page isn’t working"
+"HTTP ERROR 502"
+
+Perform a complete root-cause analysis and fix the issue.
+
+DO NOT ONLY PATCH THE ERROR.
+
+Identify the exact failing component, route, API call, middleware, environment variable, build step, or runtime exception causing the server to crash.
+
+--------------------------------------------------
+
+STEP 1 — INVESTIGATE
+
+Check:
+
+- Console errors
+- Build logs
+- Runtime logs
+- Vite logs
+- Server startup logs
+- Network requests
+- Supabase connection errors
+- Environment variable errors
+
+Determine whether the failure is caused by:
+
+- Missing environment variables
+- Supabase initialization
+- Authentication middleware
+- Invalid imports
+- React render failures
+- Infinite loops
+- API route failures
+- Storage integration
+- Screenshot upload code
+- SSR/client mismatch
+- Invalid date formatting
+- Missing database tables
+- Missing columns
+- TypeScript build failures
+
+--------------------------------------------------
+
+STEP 2 — FIND THE CRASH POINT
+
+Locate:
+
+- First thrown exception
+- File path
+- Component name
+- Function name
+- Line number
+
+Provide a detailed explanation of why the application crashes.
+
+--------------------------------------------------
+
+STEP 3 — FIX THE ISSUE
+
+Implement the proper fix.
+
+Requirements:
+
+- No temporary hacks
+- No silent error swallowing
+- No disabling functionality
+- No removing features
+
+Maintain all existing BlazeOS functionality.
+
+--------------------------------------------------
+
+STEP 4 — ADD RESILIENCY
+
+Protect against future crashes.
+
+Add:
+
+- Error boundaries
+- Loading states
+- Empty states
+- API fallbacks
+- Safe date handling
+- Safe null handling
+- Safe Supabase responses
+
+Example:
+
+Never allow:
+
+new Date(undefined)
+
+or
+
+format(invalidDate)
+
+to crash the app.
+
+--------------------------------------------------
+
+STEP 5 — VERIFY ROUTES
+
+Verify:
+
+- Dashboard
+- Trading Hub
+- Journal
+- Risk Calculator
+- Economic Calendar
+- Execution
+- AI Center
+- Knowledge Vault
+- Analytics
+- Prop Firm Tracker
+- Settings
+
+Ensure every page loads successfully.
+
+--------------------------------------------------
+
+STEP 6 — VERIFY SUPABASE
+
+Check:
+
+- URL exists
+- Publishable key exists
+- Auth works
+- Session retrieval works
+- Database queries work
+- Storage buckets exist
+
+Handle missing resources gracefully.
+
+--------------------------------------------------
+
+STEP 7 — BUILD VALIDATION
+
+Run:
+
+- TypeScript validation
+- Build validation
+- Production build validation
+
+Fix every warning that could become a runtime failure.
+
+--------------------------------------------------
+
+STEP 8 — REPORT
+
+Provide:
+
+1. Root cause
+2. File responsible
+3. Error details
+4. Changes made
+5. Verification results
+
+Do not stop until the application loads successfully without returning HTTP 502.

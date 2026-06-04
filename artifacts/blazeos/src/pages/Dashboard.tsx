@@ -11,6 +11,7 @@ import {
 import { useGetDashboardSummary, useGetDailyBias, useUpdateDailyBias, getGetDailyBiasQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { safeFormat } from "@/lib/safeDate";
 import { TodayEventsWidget } from "@/components/dashboard/TodayEventsWidget";
 import { Link } from "wouter";
 
@@ -163,7 +164,7 @@ export default function Dashboard() {
                             <span className="text-[10px] text-white/25 font-mono">{trade.setupType}</span>
                           </div>
                           <div className="text-[10px] text-white/25 font-mono mt-0.5">
-                            {format(new Date(trade.createdAt), "MMM d, HH:mm")} · {trade.session}
+                            {safeFormat(trade.createdAt, "MMM d, HH:mm")} · {trade.session}
                           </div>
                         </div>
                       </div>
@@ -260,7 +261,7 @@ export default function Dashboard() {
                     </Badge>
                     {bias?.updatedAt && (
                       <span className="text-[10px] text-white/20 font-mono">
-                        {format(new Date(bias.updatedAt), "HH:mm")}
+                        {safeFormat(bias.updatedAt, "HH:mm")}
                       </span>
                     )}
                   </div>

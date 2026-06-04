@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Landing from "@/pages/Landing";
 import Dashboard from "@/pages/Dashboard";
 import TradingHub from "@/pages/TradingHub";
@@ -53,7 +54,9 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
   if (!user) return <Redirect to="/login" />;
   return (
     <DashboardLayout>
-      <Component />
+      <ErrorBoundary pageName={Component.displayName ?? Component.name}>
+        <Component />
+      </ErrorBoundary>
     </DashboardLayout>
   );
 }
