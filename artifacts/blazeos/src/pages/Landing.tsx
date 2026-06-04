@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import {
   Flame, TrendingUp, Bot, BookOpen, BarChart3,
   Shield, Zap, Activity, ArrowRight, ChevronRight, Calendar,
-  CheckCircle2, Star, Globe, Lock,
+  CheckCircle2, Star, Globe, Lock, Users, DollarSign,
 } from "lucide-react";
 
 /* ─── Animations ──────────────────────────────────────────────── */
