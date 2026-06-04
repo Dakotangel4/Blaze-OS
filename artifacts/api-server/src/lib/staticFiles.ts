@@ -2,26 +2,37 @@ import path from "path";
 import fs from "fs";
 import express, { type Express, type Request, type Response } from "express";
 
-const IMMUTABLE = "public, max-age=31536000, immutable";
-const NO_CACHE = "no-cache";
-const NO_STORE = "no-store";
+const IMMUTABLE       = "public, max-age=31536000, immutable";
+const MEDIA_DAY       = "public, max-age=86400";
+const NO_CACHE        = "no-cache";
+const NO_STORE        = "no-store";
 
 const STATIC_DIR =
   process.env["STATIC_DIR"] ??
   path.resolve(process.cwd(), "../blazeos/dist/public");
 
+const IMMUTABLE_PREFIXES = ["vendor-", "app-api-"];
+
+const MEDIA_EXTENSIONS = new Set([
+  ".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif", ".svg", ".ico",
+  ".woff", ".woff2", ".ttf", ".otf", ".eot",
+  ".mp4", ".webm",
+]);
+
 function cacheHeaderForPath(filePath: string): string {
   const base = path.basename(filePath);
+  const ext  = path.extname(filePath).toLowerCase();
 
-  if (base.endsWith(".html")) {
+  if (ext === ".html") {
     return NO_STORE;
   }
 
-  if (
-    base.startsWith("vendor-") ||
-    base.startsWith("app-api-")
-  ) {
+  if (IMMUTABLE_PREFIXES.some((p) => base.startsWith(p))) {
     return IMMUTABLE;
+  }
+
+  if (MEDIA_EXTENSIONS.has(ext)) {
+    return MEDIA_DAY;
   }
 
   return NO_CACHE;
