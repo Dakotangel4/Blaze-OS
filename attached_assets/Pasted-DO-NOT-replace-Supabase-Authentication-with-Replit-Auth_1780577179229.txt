@@ -1,0 +1,85 @@
+DO NOT replace Supabase Authentication with Replit Auth.
+
+Supabase Auth is the permanent authentication provider for BlazeOS and must remain the primary identity system.
+
+REQUIREMENTS
+
+* Keep existing Supabase Auth implementation.
+* Keep all current Supabase sessions, users, profiles, and authentication flows.
+* Keep Email/Password authentication.
+* Keep Google OAuth authentication through Supabase.
+* Keep Row Level Security (RLS) architecture.
+* Keep user ownership tied to Supabase user IDs.
+* Keep all future features compatible with Supabase Auth.
+
+DO NOT:
+
+* Remove Supabase Auth.
+* Migrate users to Replit Auth.
+* Replace authentication middleware with Replit Auth.
+* Replace Supabase sessions with Replit sessions.
+* Make Replit Auth a dependency for login.
+
+REPLIT COMPATIBILITY
+
+The project must remain portable and deployable anywhere:
+
+* Replit
+* Vercel
+* Netlify
+* Railway
+* Render
+* Self-hosted servers
+
+The application must not depend on a specific Replit account, workspace, or contributor profile.
+
+If another contributor forks, clones, imports, or opens the project in a different Replit account, authentication must continue working through Supabase without requiring any Replit-specific login system.
+
+FILE UPLOADS
+
+Implement file uploads using Supabase Storage.
+
+Create buckets:
+
+* trade-screenshots
+* uploads
+
+Requirements:
+
+* Upload files directly to Supabase Storage.
+* Associate uploaded files with authenticated Supabase users.
+* Use Row Level Security.
+* Users can only access their own files.
+* Support image previews.
+* Support drag-and-drop uploads.
+* Support progress indicators.
+* Support delete and replace actions.
+
+DATABASE RELATIONSHIP
+
+Uploaded files must remain linked to:
+
+* user_id
+* trade_id (when applicable)
+
+using Supabase database tables.
+
+AUTHENTICATION ARCHITECTURE
+
+Authentication Provider:
+Supabase Auth
+
+Storage Provider:
+Supabase Storage
+
+Database:
+Supabase PostgreSQL
+
+User Management:
+Supabase Auth
+
+Maintain a clean separation between application logic and hosting provider.
+
+FINAL RESULT
+
+BlazeOS must remain a Supabase-powered SaaS application that can be moved between Replit accounts or deployed on any platform without changing the authentication system or breaking user access.
