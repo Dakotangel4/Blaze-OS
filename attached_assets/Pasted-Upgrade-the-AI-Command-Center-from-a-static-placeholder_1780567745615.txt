@@ -1,0 +1,179 @@
+Upgrade the AI Command Center from a static placeholder into a functional intelligence layer.
+
+CURRENT STATE
+
+The AI Center currently shows:
+
+* Trade Analyzer
+* Daily Bias Generator
+* Journal Summary
+* Client Proposal
+
+with a placeholder message:
+
+"BlazeOS AI Command Center initialized."
+
+Replace this with a real AI workflow system.
+
+GOAL
+
+The AI Center should become the brain of BlazeOS.
+
+Users should be able to select a tool, enter data, and receive structured AI output.
+
+TOOLS TO BUILD
+
+1. Trade Analyzer
+
+Inputs:
+
+* Symbol
+* Direction
+* Entry
+* Exit
+* Risk %
+* Notes
+* Screenshot upload (future-ready)
+
+Output:
+
+* Trade Score (1–10)
+* Strengths
+* Mistakes
+* Risk Assessment
+* Improvement Suggestions
+
+Display results in a professional report card layout.
+
+---
+
+2. Daily Bias Generator
+
+Inputs:
+
+* Symbol
+* DXY Bias
+* Yield Bias
+* Market Sentiment
+* Notes
+
+Output:
+
+* Institutional Bias
+* Scalper Bias
+* Liquidity Targets
+* Session Plan
+* Risk Factors
+
+Layout should resemble an institutional market briefing.
+
+---
+
+3. Journal Summary Generator
+
+Inputs:
+
+* Date Range
+* Trade History
+
+Output:
+
+* Win Rate
+* Average RR
+* Most Common Mistake
+* Best Performing Session
+* Improvement Focus
+
+Display analytics cards and summary report.
+
+---
+
+4. Client Proposal Generator
+
+Inputs:
+
+* Business Name
+* Industry
+* Services Needed
+* Budget
+
+Output:
+
+* Website Proposal
+* Features List
+* Timeline
+* Pricing Structure
+
+Generate a formatted proposal document.
+
+---
+
+AI ARCHITECTURE
+
+Create:
+
+src/features/ai/
+├── TradeAnalyzer.tsx
+├── DailyBiasGenerator.tsx
+├── JournalSummary.tsx
+├── ClientProposal.tsx
+├── aiService.ts
+
+Create a unified interface.
+
+---
+
+AI PROVIDER SETTINGS
+
+Add Settings > AI Providers
+
+Allow users to save:
+
+* OpenAI API Key
+* Claude API Key
+* Perplexity API Key
+
+Store securely in user_settings.
+
+---
+
+UI REQUIREMENTS
+
+Create a terminal-inspired interface.
+
+Show:
+
+MODEL: BLAZE-V1-INSTITUTIONAL
+STATUS: READY
+
+When running:
+
+STATUS: ANALYZING
+
+When complete:
+
+STATUS: COMPLETE
+
+Include:
+
+* typing animation
+* progress indicator
+* professional report layouts
+
+---
+
+FUTURE READY
+
+Architecture must allow future integration with:
+
+* OpenAI
+* Claude
+* Perplexity
+
+Do not hardcode providers.
+
+Create abstraction layer so AI provider can be swapped without changing UI.
+
+FINAL RESULT
+
+The AI Command Center should feel like a professional trading and business intelligence terminal rather than a chat box placeholder.

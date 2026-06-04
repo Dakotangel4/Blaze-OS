@@ -26,13 +26,25 @@ router.get("/settings", async (req, res): Promise<void> => {
 
 router.put("/settings", async (req, res): Promise<void> => {
   const body = req.body as Record<string, unknown>;
-  const finnhubApiKey =
-    typeof body.finnhubApiKey === "string" ? body.finnhubApiKey || null
-    : body.finnhubApiKey === null ? null
-    : undefined;
+  function pickKey(val: unknown): string | null | undefined {
+    if (typeof val === "string") return val || null;
+    if (val === null) return null;
+    return undefined;
+  }
 
-  if (finnhubApiKey === undefined) {
-    res.status(400).json({ error: "finnhubApiKey must be a string or null" });
+  const finnhubApiKey = pickKey(body.finnhubApiKey);
+  const openaiApiKey = pickKey(body.openaiApiKey);
+  const claudeApiKey = pickKey(body.claudeApiKey);
+  const perplexityApiKey = pickKey(body.perplexityApiKey);
+
+  const patch: Record<string, string | null | Date> = { updatedAt: new Date() };
+  if (finnhubApiKey !== undefined) patch.finnhubApiKey = finnhubApiKey;
+  if (openaiApiKey !== undefined) patch.openaiApiKey = openaiApiKey;
+  if (claudeApiKey !== undefined) patch.claudeApiKey = claudeApiKey;
+  if (perplexityApiKey !== undefined) patch.perplexityApiKey = perplexityApiKey;
+
+  if (Object.keys(patch).length === 1) {
+    res.status(400).json({ error: "No valid fields provided" });
     return;
   }
 
@@ -45,7 +57,7 @@ router.put("/settings", async (req, res): Promise<void> => {
   if (!existing) {
     const [created] = await db
       .insert(userSettingsTable)
-      .values({ finnhubApiKey })
+      .values({ finnhubApiKey: finnhubApiKey ?? null })
       .returning();
     res.json(created);
     return;
@@ -53,7 +65,7 @@ router.put("/settings", async (req, res): Promise<void> => {
 
   const [updated] = await db
     .update(userSettingsTable)
-    .set({ finnhubApiKey, updatedAt: new Date() })
+    .set(patch)
     .where(sql`id = ${existing.id}`)
     .returning();
 

@@ -1,2 +1,3 @@
 - [BlazeOS API proxy](blazeos-api-proxy.md) — Vite dev server needs `/api` proxy to port 8080; not pre-configured, must be added to vite.config.ts.
 - [API server zod](api-server-zod.md) — api-server uses @workspace/api-zod for validation, never direct `zod` import; esbuild won't resolve bare `zod` in that package.
+- [AI Command Center architecture](ai-command-center.md) — AI keys stored in DB, backend proxies all provider calls; cast AI result via `unknown` before union type to avoid TS2352.

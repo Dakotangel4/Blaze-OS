@@ -3,8 +3,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 export interface AppSettings {
   id: number;
   finnhubApiKey: string | null;
+  openaiApiKey: string | null;
+  claudeApiKey: string | null;
+  perplexityApiKey: string | null;
   updatedAt: string;
 }
+
+export type SettingsPatch = Partial<Omit<AppSettings, "id" | "updatedAt">>;
 
 const SETTINGS_KEY = ["settings"];
 
@@ -14,7 +19,7 @@ async function fetchSettings(): Promise<AppSettings> {
   return res.json();
 }
 
-async function saveSettings(data: { finnhubApiKey: string | null }): Promise<AppSettings> {
+async function saveSettings(data: SettingsPatch): Promise<AppSettings> {
   const res = await fetch("/api/settings", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
