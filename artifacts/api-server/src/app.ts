@@ -3,7 +3,9 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import { mountStaticFiles } from "./lib/staticFiles";
 import { isAuthenticated } from "./utils/replitAuth";
+import { apiCacheMiddleware } from "./middlewares/cache";
 
 const app: Express = express();
 
@@ -37,12 +39,23 @@ export async function createApp(): Promise<Express> {
     res.json({ id: user.id, name: user.name ?? null });
   });
 
+  app.use("/api", apiCacheMiddleware);
+
   app.use("/api", (req, res, next) => {
     if (req.path === "/healthz") return next();
     return isAuthenticated(req, res, next);
   });
 
   app.use("/api", router);
+
+  if (process.env["NODE_ENV"] === "production") {
+    const mounted = mountStaticFiles(app);
+    if (mounted) {
+      logger.info({ dir: process.env["STATIC_DIR"] ?? "../blazeos/dist/public" }, "Serving static files");
+    } else {
+      logger.warn("Static dir not found — skipping static file serving");
+    }
+  }
 
   return app;
 }

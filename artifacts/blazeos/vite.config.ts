@@ -105,11 +105,6 @@ export default defineConfig({
             return "vendor-query";
           }
 
-          // Supabase SDK (auth + storage)
-          if (id.includes("@supabase/")) {
-            return "vendor-supabase";
-          }
-
           // Charting stack (recharts + d3 — intentionally large, lazy-only)
           if (
             id.includes("/recharts/") ||
