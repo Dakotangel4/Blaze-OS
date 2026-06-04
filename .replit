@@ -24,6 +24,30 @@ args = "BlazeOS"
 task = "workflow.run"
 args = "API Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "typecheck"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "build-api"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "build-frontend"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "env-check"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "route-health"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "bundle-integrity"
+
 [[workflows.workflow]]
 name = "BlazeOS"
 author = "agent"
@@ -48,6 +72,72 @@ task = "shell.exec"
 args = "PORT=8080 pnpm --filter @workspace/api-server dev"
 waitForPort = 8080
 
+[[workflows.workflow]]
+name = "typecheck"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm run typecheck"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "build-api"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm --filter @workspace/api-server run build"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "build-frontend"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=5000 BASE_PATH=/ pnpm --filter @workspace/blazeos run build"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "env-check"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm --filter @workspace/scripts run check:env"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "route-health"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm --filter @workspace/scripts run check:routes"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "bundle-integrity"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm --filter @workspace/scripts run check:bundle"
+
+[workflows.workflow.metadata]
+isValidation = true
+
 [agent]
 stack = "BEST_EFFORT_FALLBACK"
 expertMode = true
@@ -68,6 +158,10 @@ externalPort = 80
 [[ports]]
 localPort = 8080
 externalPort = 8080
+
+[[ports]]
+localPort = 19876
+externalPort = 3001
 
 [[ports]]
 localPort = 24517

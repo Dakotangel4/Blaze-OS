@@ -317,7 +317,7 @@ export default function EconomicCalendar() {
 
   function handleDelete() {
     if (!deleteEvent) return;
-    deleteEventMutation.mutate(deleteEvent.id, {
+    deleteEventMutation.mutate({ id: deleteEvent.id }, {
       onSuccess: () => { setDeleteEvent(null); invalidate(); },
     });
   }

@@ -127,13 +127,15 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/logout", (req, res) => {
     req.logout(() => {
-      client
-        .buildEndSessionUrl(config, {
+      try {
+        const url = client.buildEndSessionUrl(config, {
           client_id: process.env["REPL_ID"]!,
           post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
-        })
-        .then((url) => res.redirect(url.href))
-        .catch(() => res.redirect("/"));
+        });
+        res.redirect(url.href);
+      } catch {
+        res.redirect("/");
+      }
     });
   });
 }

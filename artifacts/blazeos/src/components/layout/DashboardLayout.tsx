@@ -71,7 +71,7 @@ function NavGroup({
   const hasActive = group.items.some(
     (i) => location === i.href || location.startsWith(i.href + "/")
   );
-  const [open, setOpen] = useState(hasActive || true);
+  const [open, setOpen] = useState<boolean>(hasActive || true);
 
   return (
     <div className="mb-1">
