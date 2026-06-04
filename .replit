@@ -48,6 +48,18 @@ args = "route-health"
 task = "workflow.run"
 args = "bundle-integrity"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "ci"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "check-db"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "check-integration"
+
 [[workflows.workflow]]
 name = "BlazeOS"
 author = "agent"
@@ -137,6 +149,39 @@ args = "pnpm --filter @workspace/scripts run check:bundle"
 
 [workflows.workflow.metadata]
 isValidation = true
+
+[[workflows.workflow]]
+name = "ci"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm --filter @workspace/scripts run ci"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow]]
+name = "check-db"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm --filter @workspace/scripts run check:db"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow]]
+name = "check-integration"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm --filter @workspace/scripts run check:integration"
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [agent]
 stack = "BEST_EFFORT_FALLBACK"

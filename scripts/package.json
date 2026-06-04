@@ -7,11 +7,18 @@
     "hello": "tsx ./src/hello.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check:env": "tsx ./src/check-env.ts",
+    "check:db": "tsx ./src/check-db.ts",
     "check:routes": "tsx ./src/check-routes.ts",
-    "check:bundle": "tsx ./src/check-bundle.ts"
+    "check:bundle": "tsx ./src/check-bundle.ts",
+    "check:integration": "tsx ./src/check-integration.ts",
+    "ci": "tsx ./src/ci.ts"
+  },
+  "dependencies": {
+    "pg": "^8.20.0"
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "@types/pg": "^8.20.0",
     "tsx": "catalog:"
   }
 }
