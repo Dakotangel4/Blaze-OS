@@ -1,29 +1,30 @@
-import { supabase } from "./client";
-
-export async function getCurrentUser() {
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
+export async function getCurrentUser(): Promise<{ id: string; name?: string } | null> {
+  try {
+    const res = await fetch("/api/auth/user");
+    if (res.ok) return res.json();
+    return null;
+  } catch {
+    return null;
+  }
 }
 
-export async function requireAuth() {
+export async function requireAuth(): Promise<{ id: string; name?: string }> {
   const user = await getCurrentUser();
   if (!user) {
-    window.location.href = "/sign-in";
+    window.location.href = "/api/login";
     throw new Error("Authentication required.");
   }
   return user;
 }
 
 export async function signOut(): Promise<void> {
-  await supabase.auth.signOut();
+  window.location.href = "/api/logout";
 }
 
-export async function getSession() {
-  const { data: { session } } = await supabase.auth.getSession();
-  return session;
+export async function getSession(): Promise<null> {
+  return null;
 }
 
-export async function getAccessToken(): Promise<string | null> {
-  const { data: { session } } = await supabase.auth.getSession();
-  return session?.access_token ?? null;
+export async function getAccessToken(): Promise<null> {
+  return null;
 }

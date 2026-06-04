@@ -1,0 +1,149 @@
+Implement production-grade HTTP caching strategy for BlazeOS across the API server and static assets to complete end-to-end performance optimization.
+
+OBJECTIVE
+
+Maximize load performance and caching efficiency by properly configuring HTTP cache-control headers for:
+
+Vendor bundles
+Static assets
+Application chunks
+API responses
+
+This builds on existing Vite code-splitting and bundle optimization.
+
+SERVER CONTEXT
+
+Assume BlazeOS is served via an Express (or Node-based) production server handling:
+
+Static asset delivery (dist folder)
+API routes (Supabase proxy or custom endpoints)
+Client-side SPA routing fallback
+
+CACHE STRATEGY
+
+VENDOR CHUNKS (LONG CACHE)
+
+Files:
+
+react
+react-dom
+recharts
+supabase client
+ui libraries
+
+Headers:
+
+Cache-Control:
+max-age=31536000, immutable
+
+Purpose:
+
+Enable aggressive CDN/browser caching
+Prevent re-download of unchanged dependencies
+Optimize repeat visits
+APPLICATION CHUNKS (SHORT CACHE)
+
+Files:
+
+main bundle
+route bundles
+feature modules
+
+Headers:
+
+Cache-Control:
+no-cache
+
+Purpose:
+
+Always validate latest app version
+Ensure updates deploy instantly
+Avoid stale UI logic
+STATIC ASSETS (IMAGES, ICONS, UPLOADS)
+
+Files:
+
+trade screenshots
+avatars
+dashboard images
+logos
+
+Headers:
+
+Cache-Control:
+public, max-age=86400
+
+Optional:
+
+ETag support
+Last-Modified headers
+API RESPONSES
+
+For Express API routes:
+
+Default:
+
+Cache-Control:
+no-store
+
+Except for:
+
+Market data endpoints (optional short caching 5–10s)
+Economic calendar endpoints (if cached)
+
+IMPLEMENTATION
+
+Update Express server:
+
+Apply middleware for static assets
+Use conditional caching rules based on file path
+Detect hashed filenames for long-term caching
+
+Example rules:
+
+/assets/* → immutable caching
+.js/.css with hash → immutable
+/api/* → no-store
+
+BUILD INTEGRATION
+
+Ensure compatibility with Vite build output:
+
+hashed filenames (content-based hashing)
+chunk separation (vendor/app split)
+deterministic build outputs
+
+PERFORMANCE GOALS
+
+Achieve:
+
+Near-instant repeat page loads
+Reduced bandwidth usage
+CDN-friendly asset delivery
+Lighthouse performance improvement
+Faster Trading Hub navigation
+
+VALIDATION
+
+After implementation:
+
+Clear browser cache test
+Hard refresh test
+Repeat visit performance test
+Verify Supabase auth still works
+Verify all routes load correctly
+Verify uploads still function
+
+DELIVERABLE
+
+Provide:
+
+Express server cache middleware implementation
+Recommended cache-control policy map
+Integration notes with Vite build output
+Risk mitigation for stale assets
+Production deployment checklist
+
+FINAL RESULT
+
+BlazeOS should behave like a high-performance fintech SaaS platform with optimized caching layers across both client and server, ensuring fast repeat visits and minimal unnecessary network requests.

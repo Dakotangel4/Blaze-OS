@@ -6,45 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoader, type PageLoaderVariant } from "@/components/ui/page-loader";
-import { supabaseConfigured } from "@/utils/supabase/client";
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
-
-function SupabaseConfigError() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background text-foreground p-6">
-      <div className="max-w-md w-full rounded-xl border border-destructive/30 bg-destructive/10 p-8 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
-          <span className="text-xs font-mono tracking-widest uppercase text-destructive">
-            Configuration Error
-          </span>
-        </div>
-        <h1 className="text-xl font-bold font-mono tracking-tight">
-          Supabase credentials missing
-        </h1>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          BlazeOS requires Supabase to handle authentication. Add the following
-          secrets in your project's Secrets panel, then restart the server:
-        </p>
-        <ul className="space-y-2">
-          {["VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY"].map((key) => (
-            <li
-              key={key}
-              className="flex items-center gap-2 rounded-md border border-white/[0.08] bg-black/30 px-3 py-2 font-mono text-xs text-white/70"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-yellow-400 shrink-0" />
-              {key}
-            </li>
-          ))}
-        </ul>
-        <p className="text-xs text-muted-foreground font-mono">
-          Find these in your Supabase dashboard → Project Settings → API.
-        </p>
-      </div>
-    </div>
-  );
-}
 
 const Landing = lazy(() => import("@/pages/Landing"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
@@ -182,9 +145,6 @@ function AppRoutes() {
 }
 
 function App() {
-  if (!supabaseConfigured) {
-    return <SupabaseConfigError />;
-  }
   return (
     <WouterRouter base={basePath}>
       <QueryClientProvider client={queryClient}>

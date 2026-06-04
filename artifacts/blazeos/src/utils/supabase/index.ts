@@ -1,4 +1,4 @@
-export { supabase, createClient } from "./client";
+export { supabase } from "./client";
 export {
   getCurrentUser,
   requireAuth,

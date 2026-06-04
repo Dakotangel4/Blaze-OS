@@ -3,7 +3,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
-import { isAuthenticated } from "./utils/supabaseAuth";
+import { isAuthenticated } from "./utils/replitAuth";
 
 const app: Express = express();
 
@@ -33,8 +33,8 @@ app.use(express.urlencoded({ extended: true }));
 
 export async function createApp(): Promise<Express> {
   app.get("/api/auth/user", isAuthenticated, async (req, res) => {
-    const user = req.supabaseUser!;
-    res.json({ id: user.id, email: user.email ?? null });
+    const user = req.replitUser!;
+    res.json({ id: user.id, name: user.name ?? null });
   });
 
   app.use("/api", (req, res, next) => {

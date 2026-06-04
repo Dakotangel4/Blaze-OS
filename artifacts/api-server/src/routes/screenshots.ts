@@ -3,17 +3,13 @@ import { eq } from "drizzle-orm";
 import type { Request } from "express";
 import { db, tradeScreenshotsTable } from "@workspace/db";
 import { CreateScreenshotBody, DeleteScreenshotParams } from "@workspace/api-zod";
-import { supabaseAdmin } from "../utils/supabaseAuth";
 
 const router: IRouter = Router();
 
-const SCREENSHOTS_BUCKET = "trade-screenshots";
-
 function getUserId(req: Request): string | undefined {
-  return req.supabaseUser?.id;
+  return req.replitUser?.id;
 }
 
-// GET /api/trade-screenshots?tradeId=X
 router.get("/trade-screenshots", async (req, res): Promise<void> => {
   const tradeId = Number(req.query.tradeId);
   if (!tradeId || isNaN(tradeId)) {
@@ -28,9 +24,6 @@ router.get("/trade-screenshots", async (req, res): Promise<void> => {
   res.json(screenshots);
 });
 
-// POST /api/trade-screenshots
-// Body: { tradeId, imageUrl, imagePath, imageType }
-// The frontend uploads directly to Supabase Storage, then calls this to persist metadata.
 router.post("/trade-screenshots", async (req, res): Promise<void> => {
   const parsed = CreateScreenshotBody.safeParse(req.body);
   if (!parsed.success) {
@@ -49,8 +42,6 @@ router.post("/trade-screenshots", async (req, res): Promise<void> => {
   res.status(201).json(screenshot);
 });
 
-// DELETE /api/trade-screenshots/:id
-// Deletes the DB record and removes the file from Supabase Storage.
 router.delete("/trade-screenshots/:id", async (req, res): Promise<void> => {
   const params = DeleteScreenshotParams.safeParse(req.params);
   if (!params.success) {
@@ -69,13 +60,6 @@ router.delete("/trade-screenshots/:id", async (req, res): Promise<void> => {
   if (!deleted) {
     res.status(404).json({ error: "Screenshot not found" });
     return;
-  }
-  // imagePath stores the Supabase Storage object path (not a full URL)
-  if (deleted.imagePath && !deleted.imagePath.startsWith("http")) {
-    await supabaseAdmin.storage
-      .from(SCREENSHOTS_BUCKET)
-      .remove([deleted.imagePath])
-      .catch(() => {}); // non-fatal — file may already be gone
   }
   res.sendStatus(204);
 });

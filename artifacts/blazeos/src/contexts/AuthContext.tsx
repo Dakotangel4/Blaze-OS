@@ -1,14 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import type { User } from "@supabase/supabase-js";
-import { supabase } from "@/utils/supabase/client";
 
 export type AuthUser = {
   id: string;
-  email?: string | null;
+  name?: string | null;
   firstName?: string | null;
   lastName?: string | null;
-  profileImageUrl?: string | null;
+  email?: string | null;
+  profileImage?: string | null;
 };
 
 type AuthContextType = {
@@ -23,51 +22,28 @@ const AuthContext = createContext<AuthContextType>({
   signOut: async () => {},
 });
 
-function toAuthUser(user: User): AuthUser {
-  const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
-  return {
-    id: user.id,
-    email: user.email ?? null,
-    firstName:
-      (meta["first_name"] as string | undefined) ??
-      (meta["given_name"] as string | undefined) ??
-      null,
-    lastName:
-      (meta["last_name"] as string | undefined) ??
-      (meta["family_name"] as string | undefined) ??
-      null,
-    profileImageUrl:
-      (meta["avatar_url"] as string | undefined) ??
-      (meta["picture"] as string | undefined) ??
-      null,
-  };
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ? toAuthUser(session.user) : null);
-      setLoading(false);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ? toAuthUser(session.user) : null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    fetch("/api/auth/user")
+      .then((res) => {
+        if (res.ok) return res.json();
+        return null;
+      })
+      .then((data: { id: string; name?: string } | null) => {
+        setUser(data ? { id: data.id, name: data.name ?? null } : null);
+      })
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
   }, []);
 
   const signOut = async () => {
     queryClient.clear();
-    await supabase.auth.signOut();
     setUser(null);
+    window.location.href = "/api/logout";
   };
 
   return (

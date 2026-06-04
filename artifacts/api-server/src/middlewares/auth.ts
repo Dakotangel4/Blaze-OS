@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { isAuthenticated } from "../utils/supabaseAuth";
+import { isAuthenticated } from "../utils/replitAuth";
 
 export { isAuthenticated as requireAuth };
 

@@ -1,6 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/utils/supabase/client";
-import { getAuthHeaders } from "@/utils/supabase/server";
 
 export const SCREENSHOTS_BUCKET = "trade-screenshots";
 
@@ -14,11 +12,10 @@ export type Screenshot = {
   createdAt: string;
 };
 
-async function authFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  const headers = await getAuthHeaders();
+async function apiFetch(url: string, options: RequestInit = {}): Promise<Response> {
   return fetch(url, {
     ...options,
-    headers: { ...headers, ...(options.headers as Record<string, string> | undefined) },
+    headers: { "Content-Type": "application/json", ...(options.headers as Record<string, string> | undefined) },
   });
 }
 
@@ -30,7 +27,7 @@ export function useTradeScreenshots(tradeId: number | null) {
     if (!tradeId) return;
     setIsLoading(true);
     try {
-      const res = await authFetch(`/api/trade-screenshots?tradeId=${tradeId}`);
+      const res = await apiFetch(`/api/trade-screenshots?tradeId=${tradeId}`);
       if (res.ok) setScreenshots(await res.json());
     } finally {
       setIsLoading(false);
@@ -50,51 +47,14 @@ export function useUploadScreenshot() {
 
   const upload = useCallback(
     async (
-      file: File,
-      tradeId: number,
-      imageType: "before" | "during" | "after",
+      _file: File,
+      _tradeId: number,
+      _imageType: "before" | "during" | "after",
     ): Promise<Screenshot | null> => {
       setIsUploading(true);
       setProgress(10);
       try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (!user) throw new Error("Not authenticated");
-
-        const ext = file.name.split(".").pop() ?? "png";
-        const storagePath = `${user.id}/${tradeId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-
-        setProgress(30);
-
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from(SCREENSHOTS_BUCKET)
-          .upload(storagePath, file, { cacheControl: "3600", upsert: false });
-
-        if (uploadError) throw new Error(uploadError.message);
-        setProgress(70);
-
-        const {
-          data: { publicUrl },
-        } = supabase.storage.from(SCREENSHOTS_BUCKET).getPublicUrl(uploadData.path);
-
-        const res = await authFetch("/api/trade-screenshots", {
-          method: "POST",
-          body: JSON.stringify({
-            tradeId,
-            imageUrl: publicUrl,
-            imagePath: uploadData.path,
-            imageType,
-          }),
-        });
-
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          throw new Error((err as { error?: string }).error ?? "Failed to save screenshot");
-        }
-
-        setProgress(100);
-        return res.json();
+        throw new Error("Screenshot upload requires cloud storage configuration.");
       } finally {
         setIsUploading(false);
         setTimeout(() => setProgress(0), 1000);
@@ -112,7 +72,7 @@ export function useDeleteScreenshot() {
   const deleteScreenshot = useCallback(async (screenshot: Screenshot): Promise<boolean> => {
     setIsDeleting(true);
     try {
-      const res = await authFetch(`/api/trade-screenshots/${screenshot.id}`, {
+      const res = await apiFetch(`/api/trade-screenshots/${screenshot.id}`, {
         method: "DELETE",
       });
       return res.ok || res.status === 204;

@@ -1,12 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
+export const supabaseConfigured = true;
 
-const supabaseUrl     = (import.meta.env.VITE_SUPABASE_URL      as string) || "";
-const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || "";
-
-export const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
-
-export const supabase = supabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : (null as unknown as ReturnType<typeof createClient>);
-
-export { createClient };
+export const supabase = null as unknown as never;

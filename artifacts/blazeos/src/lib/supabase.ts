@@ -1,1 +1,1 @@
-export { supabase } from "@/utils/supabase/client";
+export const supabase = null as unknown as never;
