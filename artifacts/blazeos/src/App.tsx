@@ -9,11 +9,13 @@ import Dashboard from "@/pages/Dashboard";
 import TradingHub from "@/pages/TradingHub";
 import RiskCalculator from "@/pages/RiskCalculator";
 import KnowledgeVault from "@/pages/KnowledgeVault";
-import CRM from "@/pages/CRM";
 import EconomicCalendar from "@/pages/EconomicCalendar";
 import AICenter from "@/pages/AICenter";
-import FinanceTracker from "@/pages/FinanceTracker";
 import Settings from "@/pages/Settings";
+import Journal from "@/pages/Journal";
+import Execution from "@/pages/Execution";
+import Analytics from "@/pages/Analytics";
+import PropFirmTracker from "@/pages/PropFirmTracker";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SignInPage from "@/pages/SignIn";
 import SignUpPage from "@/pages/SignUp";
@@ -77,13 +79,15 @@ function AppRoutes() {
       <Route path="/dashboard"><ProtectedRoute component={Dashboard} /></Route>
       <Route path="/trading"><ProtectedRoute component={TradingHub} /></Route>
       <Route path="/trading-hub"><ProtectedRoute component={TradingHub} /></Route>
+      <Route path="/journal"><ProtectedRoute component={Journal} /></Route>
       <Route path="/risk"><ProtectedRoute component={RiskCalculator} /></Route>
+      <Route path="/calendar"><ProtectedRoute component={EconomicCalendar} /></Route>
+      <Route path="/execution"><ProtectedRoute component={Execution} /></Route>
+      <Route path="/ai"><ProtectedRoute component={AICenter} /></Route>
       <Route path="/knowledge"><ProtectedRoute component={KnowledgeVault} /></Route>
       <Route path="/knowledge-vault"><ProtectedRoute component={KnowledgeVault} /></Route>
-      <Route path="/crm"><ProtectedRoute component={CRM} /></Route>
-      <Route path="/calendar"><ProtectedRoute component={EconomicCalendar} /></Route>
-      <Route path="/ai"><ProtectedRoute component={AICenter} /></Route>
-      <Route path="/finance"><ProtectedRoute component={FinanceTracker} /></Route>
+      <Route path="/analytics"><ProtectedRoute component={Analytics} /></Route>
+      <Route path="/prop-firm"><ProtectedRoute component={PropFirmTracker} /></Route>
       <Route path="/settings"><ProtectedRoute component={Settings} /></Route>
 
       <Route>

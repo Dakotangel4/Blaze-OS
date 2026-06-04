@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import {
-  Flame, TrendingUp, Bot, BookOpen, Users, DollarSign, BarChart3,
+  Flame, TrendingUp, Bot, BookOpen, BarChart3,
   Shield, Zap, Activity, ArrowRight, ChevronRight, Calendar,
   CheckCircle2, Star, Globe, Lock,
 } from "lucide-react";
@@ -72,16 +72,16 @@ const FEATURES = [
     tags: ["Playbooks", "Strategy Notes", "Tagged Search"],
   },
   {
-    icon: Users, color: "text-purple-400",       bg: "bg-purple-400/10", border: "border-purple-400/20",
-    title: "Client CRM",
-    desc: "Track leads, manage active clients, and visualize your deal pipeline from first contact to closed retainer.",
-    tags: ["Pipeline View", "Lead Tracking", "Follow-ups"],
+    icon: Shield, color: "text-orange-400",      bg: "bg-orange-400/10", border: "border-orange-400/20",
+    title: "Prop Firm Tracker",
+    desc: "Monitor every prop challenge and funded account with live drawdown progress bars, payout eligibility alerts, and rule-violation warnings.",
+    tags: ["Drawdown Monitor", "Phase Tracking", "Payout Alerts"],
   },
   {
-    icon: DollarSign, color: "text-yellow-400",  bg: "bg-yellow-400/10", border: "border-yellow-400/20",
-    title: "Finance Dashboard",
-    desc: "Separate your trading P&L from your business finances. Track invoices, expenses, and monthly cashflow in one place.",
-    tags: ["Income Tracking", "Expense Log", "Cashflow"],
+    icon: BarChart3, color: "text-yellow-400",   bg: "bg-yellow-400/10", border: "border-yellow-400/20",
+    title: "Analytics",
+    desc: "Visualize your equity curve, monthly returns, win/loss distribution, and session performance — all from your logged trades.",
+    tags: ["Equity Curve", "Session Stats", "Symbol Breakdown"],
   },
   {
     icon: Calendar, color: "text-red-400",       bg: "bg-red-400/10",    border: "border-red-400/20",
@@ -117,14 +117,14 @@ const MODULES = [
     mockup: <AIMockup />,
   },
   {
-    badge: "CLIENT CRM", icon: Users, color: "text-purple-400",
-    headline: "Your client pipeline, under control.",
-    desc: "Whether you manage 5 clients or 50, BlazeOS gives you a clean, fast CRM to track every relationship and revenue opportunity.",
+    badge: "PROP FIRM TRACKER", icon: Shield, color: "text-orange-400",
+    headline: "Never blow a prop account again.",
+    desc: "Track every challenge and funded account in one place. Real-time drawdown monitoring, payout eligibility flags, and rule-violation alerts keep you on the right side of your prop firm at all times.",
     bullets: [
-      "Kanban pipeline: Lead → Active → Closed",
-      "Client notes, contact history, and deal values",
-      "Revenue attribution by client and month",
-      "Never miss a follow-up with reminders",
+      "Live max drawdown and daily drawdown progress bars",
+      "Payout eligibility badge when profit target is hit",
+      "Red warning when you exceed 70% of max drawdown",
+      "FTMO, FundedNext, Goat Funded presets built in",
     ],
     mockup: <CRMMockup />,
   },

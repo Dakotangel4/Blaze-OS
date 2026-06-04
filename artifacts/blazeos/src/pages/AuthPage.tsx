@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Flame, TrendingUp, Bot, BookOpen, Users, DollarSign,
+  Flame, TrendingUp, Bot, BookOpen,
   Eye, EyeOff, AlertCircle, CheckCircle2, ArrowLeft, Loader2,
   BarChart2, Activity, Shield,
 } from "lucide-react";
@@ -30,11 +30,11 @@ const TICKER_ITEMS = [
 ];
 
 const FEATURES = [
-  { icon: TrendingUp, label: "Trading Hub",          desc: "Log trades, analyze setups, and track P&L" },
-  { icon: Bot,        label: "AI Command Center",    desc: "GPT-4, Claude & Perplexity for your edge" },
-  { icon: BookOpen,   label: "Knowledge Vault",      desc: "Playbooks, strategies, and trade notes" },
-  { icon: Users,      label: "CRM",                  desc: "Manage clients, track deals, build pipelines" },
-  { icon: DollarSign, label: "Finance Dashboard",    desc: "Income, expenses, and business cashflow" },
+  { icon: TrendingUp,  label: "Trading Hub",          desc: "Log trades, analyze setups, and track P&L" },
+  { icon: Bot,         label: "AI Command Center",    desc: "GPT-4, Claude & Perplexity for your edge" },
+  { icon: BookOpen,    label: "Knowledge Vault",      desc: "Playbooks, strategies, and trade notes" },
+  { icon: Shield,      label: "Prop Firm Tracker",    desc: "Monitor drawdown, phases, and payout eligibility" },
+  { icon: BarChart2,   label: "Analytics",            desc: "Equity curve, session stats, and symbol breakdown" },
 ];
 
 const MOCK_BARS = [30, 52, 45, 70, 48, 88, 62, 77, 55, 92, 68, 82];
