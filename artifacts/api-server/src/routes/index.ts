@@ -8,6 +8,7 @@ import calendarRouter from "./calendar";
 import financesRouter from "./finances";
 import settingsRouter from "./settings";
 import aiRouter from "./ai";
+import screenshotsRouter from "./screenshots";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(calendarRouter);
 router.use(financesRouter);
 router.use(settingsRouter);
 router.use(aiRouter);
+router.use(screenshotsRouter);
 
 export default router;

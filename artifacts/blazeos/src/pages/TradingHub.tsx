@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { ArrowDownUp } from "lucide-react";
+import { ArrowDownUp, Camera } from "lucide-react";
+import { TradeReviewModal } from "@/components/trading/TradeReviewModal";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -50,6 +51,12 @@ export default function TradingHub() {
   const [filterSymbol, setFilterSymbol] = useState<string>("all");
   const [filterResult, setFilterResult] = useState<string>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [reviewTrade, setReviewTrade] = useState<{
+    id: number; symbol: string; direction: string; entryPrice: number;
+    exitPrice: number; riskPercent: number; lotSize: number; setupType: string;
+    session: string; result: string; notes?: string | null; pnl?: number | null; createdAt: string;
+  } | null>(null);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -213,11 +220,12 @@ export default function TradingHub() {
                     <TableHead>Session</TableHead>
                     <TableHead>Result</TableHead>
                     <TableHead className="text-right">P&amp;L</TableHead>
+                    <TableHead className="text-center w-16">Review</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {trades.map((trade) => (
-                    <TableRow key={trade.id}>
+                    <TableRow key={trade.id} className="group">
                       <TableCell className="font-mono text-xs text-muted-foreground">
                         {format(new Date(trade.createdAt), "MMM d, HH:mm")}
                       </TableCell>
@@ -242,6 +250,18 @@ export default function TradingHub() {
                       <TableCell className={`text-right font-bold font-mono ${trade.pnl && trade.pnl >= 0 ? "text-green-500" : "text-destructive"}`}>
                         {trade.pnl && trade.pnl > 0 ? "+" : ""}${trade.pnl?.toFixed(2) ?? "0.00"}
                       </TableCell>
+                      <TableCell className="text-center">
+                        <button
+                          onClick={() => {
+                            setReviewTrade(trade as typeof reviewTrade);
+                            setIsReviewOpen(true);
+                          }}
+                          title="View / upload screenshots"
+                          className="inline-flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                        >
+                          <Camera className="h-3.5 w-3.5" />
+                        </button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -250,6 +270,13 @@ export default function TradingHub() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Trade Review / Screenshot Modal */}
+      <TradeReviewModal
+        trade={reviewTrade}
+        open={isReviewOpen}
+        onClose={() => setIsReviewOpen(false)}
+      />
 
       {/* Log Trade Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

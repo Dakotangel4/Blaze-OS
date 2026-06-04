@@ -5,3 +5,4 @@ export * from "./calendarEvents";
 export * from "./finances";
 export * from "./dailyBias";
 export * from "./userSettings";
+export * from "./tradeScreenshots";

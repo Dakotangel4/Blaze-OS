@@ -1,0 +1,258 @@
+Upgrade the Trading Hub with a premium Trade Screenshot Upload system designed for professional traders, prop firm users, and trading journals.
+
+GOAL
+
+Allow traders to upload and manage chart screenshots directly inside each trade entry.
+
+The feature should feel like a professional trading journal platform such as:
+
+- TradeZella
+- TraderSync
+- Edgewonk
+- FTMO Dashboard
+- TradingView
+
+This must NOT feel like a generic file upload form.
+
+--------------------------------------------------
+
+TRADE SCREENSHOT CENTER
+
+Each trade should support:
+
+- Before Entry Screenshot
+- During Trade Screenshot (optional)
+- After Exit Screenshot
+
+Supported formats:
+
+- PNG
+- JPG
+- JPEG
+- WEBP
+
+Maximum size:
+
+- 10MB per image
+
+Store screenshots in Supabase Storage.
+
+Bucket:
+
+trade-screenshots
+
+--------------------------------------------------
+
+PREMIUM UI DESIGN
+
+Replace standard file inputs.
+
+Create a beautiful drag-and-drop upload experience.
+
+Design:
+
+- Dark institutional theme
+- Glassmorphism upload cards
+- Subtle gradients
+- Rounded corners
+- Professional shadows
+- Smooth animations
+
+The upload zone should resemble:
+
+"Drop TradingView screenshots here"
+
+or
+
+"Click to upload chart images"
+
+--------------------------------------------------
+
+UPLOAD CARD LAYOUT
+
+For each trade:
+
+┌─────────────────────────────┐
+│ BEFORE ENTRY                │
+│                             │
+│   Drag Screenshot Here      │
+│                             │
+└─────────────────────────────┘
+
+┌─────────────────────────────┐
+│ AFTER EXIT                  │
+│                             │
+│   Drag Screenshot Here      │
+│                             │
+└─────────────────────────────┘
+
+Once uploaded:
+
+Display image previews immediately.
+
+--------------------------------------------------
+
+SCREENSHOT GALLERY
+
+Inside every trade record:
+
+Display screenshots in a premium gallery.
+
+Features:
+
+- Grid layout
+- Hover effects
+- Expand image modal
+- Full-screen viewing
+- Zoom support
+- Download button
+- Delete button
+
+Use elegant animations.
+
+--------------------------------------------------
+
+TRADE REVIEW MODE
+
+Create a dedicated review section.
+
+Layout:
+
+Left Side:
+- Before Screenshot
+
+Right Side:
+- After Screenshot
+
+Below:
+
+Trade Statistics
+
+- Symbol
+- Direction
+- Entry
+- Exit
+- RR
+- Profit/Loss
+
+Trader Notes
+
+Lessons Learned
+
+This should feel like reviewing a completed prop-firm trade.
+
+--------------------------------------------------
+
+VISUAL ENHANCEMENTS
+
+Add:
+
+- Skeleton loading states
+- Upload progress bars
+- Success animations
+- Drag-over glow effects
+- Image hover scaling
+- Fade transitions
+
+Use Framer Motion where appropriate.
+
+--------------------------------------------------
+
+SMART FEATURES
+
+Auto-tag screenshots:
+
+- XAUUSD
+- NAS100
+- BTCUSD
+
+based on selected trade symbol.
+
+Generate image metadata:
+
+- Upload date
+- Trade ID
+- Session
+- Symbol
+
+--------------------------------------------------
+
+MOBILE EXPERIENCE
+
+Ensure mobile responsiveness.
+
+Support:
+
+- Camera upload
+- Gallery upload
+- Touch-friendly image preview
+
+--------------------------------------------------
+
+SUPABASE INTEGRATION
+
+Create:
+
+trade_screenshots table
+
+Fields:
+
+- id
+- trade_id
+- user_id
+- image_url
+- image_type
+- created_at
+
+Image Types:
+
+- before
+- during
+- after
+
+Use Supabase Storage URLs.
+
+Enable Row Level Security.
+
+Users can only access their own screenshots.
+
+--------------------------------------------------
+
+TRADING HUB ENHANCEMENT
+
+When viewing a trade:
+
+Show small preview thumbnails.
+
+Example:
+
+[XAUUSD SELL]
+
+📷 Before
+📷 After
+
+Clicking opens review mode.
+
+--------------------------------------------------
+
+EMPTY STATE
+
+When no screenshots exist:
+
+Show a premium placeholder illustration.
+
+Message:
+
+"Capture your analysis and build a visual trading journal."
+
+Button:
+
+Upload Screenshot
+
+--------------------------------------------------
+
+FINAL RESULT
+
+The screenshot feature should feel like a professional trading performance platform rather than a basic file uploader.
+
+Every uploaded chart should become part of a visually appealing trade review experience that helps traders analyze execution, improve performance, and build a complete institutional-grade trading journal.
