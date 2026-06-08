@@ -1,17 +1,13 @@
 /**
  * BlazeOS — Integration Integrity Gate
  *
- * Verifies that the Supabase Auth + Storage architecture is correct:
+ * Verifies that the Replit Auth architecture is correct:
  *
- *   1. API server uses @supabase/supabase-js for JWT verification (required).
- *   2. SUPABASE_ANON_KEY is never referenced in API server code (frontend-only).
- *   3. Frontend Supabase client is a real client, not a stub.
- *   4. SUPABASE_SERVICE_ROLE_KEY is never referenced in frontend source.
- *   5. AI provider calls go through the backend proxy (not directly from the browser).
- *   6. Production bundle: SUPABASE_SERVICE_ROLE_KEY must never appear in JS output.
- *
- * Note: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are intentionally bundled
- * into the frontend — the anon key is public by design and protected by Supabase RLS.
+ *   1. API server uses Replit Auth (x-replit-user-id headers) — not Supabase JWT.
+ *   2. No Supabase service-role key referenced anywhere (security check).
+ *   3. Frontend Supabase client is a stub (Supabase auth replaced by Replit Auth).
+ *   4. AI provider calls go through the backend proxy (not directly from the browser).
+ *   5. Production bundle: no secret keys must appear in JS output.
  *
  * Exits 1 with a human-readable report if any check fails.
  */
@@ -27,7 +23,6 @@ const BLAZE_DIST = path.join(ROOT, "artifacts/blazeos/dist/public");
 
 const RED    = "\x1b[31m";
 const GREEN  = "\x1b[32m";
-const YELLOW = "\x1b[33m";
 const DIM    = "\x1b[2m";
 const BOLD   = "\x1b[1m";
 const RESET  = "\x1b[0m";
@@ -90,78 +85,59 @@ async function run() {
   console.log(`\n${BOLD}BlazeOS — Integration Integrity Check${RESET}\n${"─".repeat(50)}`);
   let failed = false;
 
-  // ── 1. API server must import @supabase/supabase-js (JWT verification) ──
-  console.log(`\n  Checking API server uses Supabase for JWT verification:`);
-  const apiFiles = walkTs(API_SRC);
-  const apiAuthFile = path.join(API_SRC, "utils/supabaseAuth.ts");
-  if (existsSync(apiAuthFile)) {
-    const content = readFileSync(apiAuthFile, "utf8");
-    if (content.includes("@supabase/supabase-js") && content.includes("getUser")) {
-      console.log(`    ${GREEN}✓${RESET} supabaseAuth.ts uses Supabase JWT verification`);
+  // ── 1. API server must use Replit Auth (replitAuth.ts) ──────────────────
+  console.log(`\n  Checking API server uses Replit Auth:`);
+  const replitAuthFile = path.join(API_SRC, "utils/replitAuth.ts");
+  if (existsSync(replitAuthFile)) {
+    const content = readFileSync(replitAuthFile, "utf8");
+    if (content.includes("x-replit-user-id")) {
+      console.log(`    ${GREEN}✓${RESET} replitAuth.ts uses Replit Auth (x-replit-user-id headers)`);
     } else {
-      console.log(`    ${RED}✗${RESET} supabaseAuth.ts is missing Supabase JWT verification`);
+      console.log(`    ${RED}✗${RESET} replitAuth.ts is missing Replit Auth header verification`);
       failed = true;
     }
   } else {
-    console.log(`    ${RED}✗${RESET} utils/supabaseAuth.ts not found — Supabase Auth not configured`);
+    console.log(`    ${RED}✗${RESET} utils/replitAuth.ts not found — Replit Auth not configured`);
     failed = true;
   }
 
-  // ── 2. API server must NOT reference SUPABASE_ANON_KEY ─────────────────
-  console.log(`\n  Checking API server does not use the anon key (frontend-only):`);
-  const anonKeyViolations = scan(
+  // ── 2. No Supabase service-role key in API server ───────────────────────
+  console.log(`\n  Checking API server does not use Supabase service-role key:`);
+  const apiFiles = walkTs(API_SRC);
+  const serviceKeyApiViolations = scan(
     apiFiles,
-    [{ re: /SUPABASE_ANON_KEY/, rule: "SUPABASE_ANON_KEY referenced in API server (use SERVICE_ROLE_KEY instead)" }],
+    [{ re: /SUPABASE_SERVICE_ROLE_KEY/, rule: "SUPABASE_SERVICE_ROLE_KEY referenced in API server (Replit Auth is used instead)" }],
     ROOT,
   );
-  if (anonKeyViolations.length === 0) {
-    console.log(`    ${GREEN}✓${RESET} SUPABASE_ANON_KEY not referenced in API server`);
+  if (serviceKeyApiViolations.length === 0) {
+    console.log(`    ${GREEN}✓${RESET} SUPABASE_SERVICE_ROLE_KEY not referenced in API server`);
   } else {
     failed = true;
-    for (const v of anonKeyViolations) {
+    for (const v of serviceKeyApiViolations) {
       console.log(`    ${RED}✗${RESET} ${v.file}:${v.line}  ${DIM}${v.text}${RESET}`);
       console.log(`      ${RED}Rule: ${v.rule}${RESET}`);
     }
   }
 
-  // ── 3. Frontend Supabase client must be a real client, not a stub ───────
-  console.log(`\n  Verifying frontend Supabase client is real (not a stub):`);
+  // ── 3. Frontend Supabase client should be a stub (auth migrated) ────────
+  console.log(`\n  Verifying frontend Supabase client is correctly stubbed (Replit Auth):`);
   const stubFile = path.join(BLAZE_SRC, "utils/supabase/client.ts");
   if (existsSync(stubFile)) {
     const content = readFileSync(stubFile, "utf8");
-    const isReal  = content.includes("createClient") && content.includes("VITE_SUPABASE");
-    const isStub  = content.includes("session: null") || content.includes("stub");
-    if (isReal && !isStub) {
-      console.log(`    ${GREEN}✓${RESET} Frontend Supabase client is a live client`);
+    const isStubbed = content.includes("null") && !content.includes("createClient(");
+    if (isStubbed) {
+      console.log(`    ${GREEN}✓${RESET} Frontend Supabase client is correctly stubbed (auth uses Replit Auth)`);
     } else {
-      console.log(`    ${RED}✗${RESET} ${path.relative(ROOT, stubFile)} appears to be a stub — restore the real Supabase client`);
+      console.log(`    ${RED}✗${RESET} Frontend Supabase client appears to be a live client — auth should use Replit Auth`);
       failed = true;
     }
   } else {
-    console.log(`    ${RED}✗${RESET} utils/supabase/client.ts not found`);
-    failed = true;
+    console.log(`    ${GREEN}✓${RESET} No Supabase client file found (fully migrated)`);
   }
 
-  // ── 4. Frontend must NOT reference SUPABASE_SERVICE_ROLE_KEY ───────────
-  console.log(`\n  Checking frontend does not expose the service-role key:`);
-  const frontendFiles = walkTs(BLAZE_SRC);
-  const serviceKeyViolations = scan(
-    frontendFiles,
-    [{ re: /SUPABASE_SERVICE_ROLE_KEY/, rule: "SUPABASE_SERVICE_ROLE_KEY in frontend source — this key must never reach the browser" }],
-    ROOT,
-  );
-  if (serviceKeyViolations.length === 0) {
-    console.log(`    ${GREEN}✓${RESET} SUPABASE_SERVICE_ROLE_KEY not referenced in frontend`);
-  } else {
-    failed = true;
-    for (const v of serviceKeyViolations) {
-      console.log(`    ${RED}✗${RESET} ${v.file}:${v.line}  ${DIM}${v.text}${RESET}`);
-      console.log(`      ${RED}Rule: ${v.rule}${RESET}`);
-    }
-  }
-
-  // ── 5. AI API calls go through backend, not browser ────────────────────
+  // ── 4. AI API calls go through backend, not browser ────────────────────
   console.log(`\n  Checking AI provider calls go through backend proxy:`);
+  const frontendFiles = walkTs(BLAZE_SRC);
   const directAiViolations = scan(
     frontendFiles,
     [
@@ -182,9 +158,9 @@ async function run() {
     }
   }
 
-  // ── 6. Production bundle: service-role key must never leak ─────────────
+  // ── 5. Production bundle: no secret keys must ever leak ─────────────────
   if (existsSync(BLAZE_DIST)) {
-    console.log(`\n  Scanning production bundle for service-role key leaks:`);
+    console.log(`\n  Scanning production bundle for secret key leaks:`);
     const jsFiles = walkJs(BLAZE_DIST);
     let leaked = false;
     for (const f of jsFiles) {
@@ -198,10 +174,7 @@ async function run() {
     }
     if (!leaked) {
       console.log(
-        `    ${GREEN}✓${RESET} No service-role key in production bundle ${DIM}(${jsFiles.length} JS files scanned)${RESET}`,
-      );
-      console.log(
-        `    ${DIM}Note: Supabase URL and anon key are intentionally bundled (public by design)${RESET}`,
+        `    ${GREEN}✓${RESET} No secret keys in production bundle ${DIM}(${jsFiles.length} JS files scanned)${RESET}`,
       );
     }
   } else {

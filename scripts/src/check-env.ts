@@ -2,11 +2,10 @@
  * BlazeOS — Environment Variable Gate
  *
  * Validates that every env var required to start the API server and run
- * Supabase Auth + database operations is present. Exits 1 with a human-
+ * Replit Auth + database operations is present. Exits 1 with a human-
  * readable error report if anything is missing.
  *
- * Auth provider: Supabase Auth (portable — works on any platform)
- * Storage:       Supabase Storage
+ * Auth provider: Replit Auth (x-replit-user-id headers via Replit proxy)
  * Database:      PostgreSQL (connection string via DATABASE_URL)
  */
 
@@ -21,25 +20,12 @@ const REQUIRED: EnvRule[] = [
     key: "DATABASE_URL",
     description: "PostgreSQL connection string",
   },
-  {
-    key: "SUPABASE_URL",
-    description: "Supabase project URL (e.g. https://xyz.supabase.co)",
-  },
-  {
-    key: "SUPABASE_SERVICE_ROLE_KEY",
-    description: "Supabase service-role key — backend JWT verification (never expose to browser)",
-  },
 ];
 
 const ADVISORY: EnvRule[] = [
   {
-    key: "VITE_SUPABASE_URL",
-    description: "Supabase URL baked into Vite frontend bundle (public — safe to ship in browser)",
-    advisory: true,
-  },
-  {
-    key: "VITE_SUPABASE_ANON_KEY",
-    description: "Supabase anon key baked into Vite bundle (public by design — protected by RLS)",
+    key: "REPL_ID",
+    description: "Replit runtime ID (auto-set by Replit — not required locally)",
     advisory: true,
   },
 ];
@@ -85,7 +71,7 @@ function run() {
       console.log(`    ${RED}•${RESET} ${BOLD}${r.key}${RESET} — ${r.description}`);
     }
     console.log(
-      `\n  Set these in your platform's secrets panel (Replit Secrets, Railway Variables, etc.) before deploying.\n`,
+      `\n  Set these in your Replit Secrets panel before deploying.\n`,
     );
     process.exit(1);
   }
@@ -98,15 +84,6 @@ function run() {
     process.exit(1);
   }
   console.log(`  ${GREEN}✓${RESET} DATABASE_URL format              ${DIM}valid postgres:// URI${RESET}`);
-
-  // Validate SUPABASE_URL format
-  const supabaseUrl = process.env["SUPABASE_URL"]!;
-  if (!supabaseUrl.startsWith("https://")) {
-    console.log(`\n  ${RED}✗ SUPABASE_URL must start with https://${RESET}`);
-    console.log(`    Got: ${supabaseUrl.slice(0, 30)}…\n`);
-    process.exit(1);
-  }
-  console.log(`  ${GREEN}✓${RESET} SUPABASE_URL format              ${DIM}valid https:// URL${RESET}`);
 
   console.log(`\n  ${GREEN}${BOLD}All required environment variables are present.${RESET}\n`);
 }

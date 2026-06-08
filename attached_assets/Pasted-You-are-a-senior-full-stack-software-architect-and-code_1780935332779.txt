@@ -1,0 +1,108 @@
+You are a senior full-stack software architect and codebase integration engineer.
+
+TASK:
+Merge two existing GitHub repositories into one cohesive, production-ready application.
+
+OBJECTIVES:
+
+1. Analyze both repositories completely.
+2. Identify overlapping functionality, duplicate files, conflicting dependencies, and redundant components.
+3. Design a unified architecture before making any changes.
+4. Preserve all valuable functionality from both projects.
+5. Remove dead code, duplicated utilities, and unnecessary dependencies.
+6. Standardize:
+
+   * Folder structure
+   * Naming conventions
+   * API patterns
+   * Component architecture
+   * Styling system
+   * Environment variables
+   * Authentication flow
+   * Database access patterns
+
+INTEGRATION PROCESS:
+
+Phase 1: Discovery
+
+* Audit both repositories.
+* Generate a report:
+
+  * Features from Project A
+  * Features from Project B
+  * Shared functionality
+  * Conflicts
+  * Missing integrations
+
+Phase 2: Architecture
+
+* Design the optimal combined architecture.
+* Explain:
+
+  * Folder structure
+  * Data flow
+  * Backend services
+  * Frontend modules
+  * Shared utilities
+
+Phase 3: Merge
+
+* Merge both projects into a single codebase.
+* Resolve dependency conflicts.
+* Consolidate reusable code.
+* Refactor duplicated logic into shared modules.
+
+Phase 4: Optimization
+
+* Improve performance.
+* Remove unused packages.
+* Reduce bundle size.
+* Optimize database queries.
+* Improve error handling.
+* Improve security.
+
+Phase 5: Production Hardening
+
+* Add:
+
+  * Logging
+  * Monitoring hooks
+  * Validation
+  * Rate limiting
+  * Environment management
+  * Security best practices
+
+Phase 6: Documentation
+Create:
+
+* Architecture documentation
+* Folder structure documentation
+* Installation guide
+* Deployment guide
+* Environment variable documentation
+
+OUTPUT REQUIREMENTS:
+
+Before modifying files:
+
+1. Explain the proposed architecture.
+2. Explain every major merge decision.
+3. List conflicts and resolutions.
+
+After merge:
+
+1. Provide final folder structure.
+2. Provide migration steps.
+3. Provide deployment instructions.
+
+QUALITY RULES:
+
+* Do not blindly overwrite code.
+* Prefer the stronger implementation when duplicates exist.
+* Keep the codebase scalable and maintainable.
+* Follow production-grade engineering standards.
+* Think like a CTO reviewing a startup's core platform.
+
+END GOAL:
+
+Deliver one clean, unified, scalable application that combines the strengths of both repositories while eliminating redundancy and technical debt.
