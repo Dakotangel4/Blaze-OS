@@ -273,6 +273,94 @@ export interface FinanceSummary {
   byCategory?: FinanceByCategory[];
 }
 
+export interface EquityCurvePoint {
+  date: string;
+  cumPnlR: number;
+}
+
+export interface SessionPerformance {
+  session: string;
+  winRate: number;
+  trades: number;
+}
+
+export interface PairPerformance {
+  pair: string;
+  pnlR: number;
+  trades: number;
+}
+
+export interface Playbook {
+  id: number;
+  name: string;
+  description: string;
+  rules: string;
+  /** @nullable */
+  minRR?: number | null;
+  totalTrades: number;
+  wins: number;
+  losses: number;
+  /** @nullable */
+  winRate?: number | null;
+  createdAt: string;
+}
+
+export interface PlaybookInput {
+  name: string;
+  description: string;
+  rules: string;
+  minRR?: number;
+}
+
+export interface PlaybookUpdate {
+  name?: string;
+  description?: string;
+  rules?: string;
+  minRR?: number;
+}
+
+export interface Account {
+  id: number;
+  name: string;
+  firm: string;
+  accountSize: number;
+  currentBalance: number;
+  dailyDrawdownLimit: number;
+  maxDrawdownLimit: number;
+  profitTarget: number;
+  trailingDrawdown: boolean;
+  status: string;
+  /** @nullable */
+  notes?: string | null;
+  createdAt: string;
+}
+
+export interface AccountInput {
+  name: string;
+  firm: string;
+  accountSize: number;
+  currentBalance: number;
+  dailyDrawdownLimit: number;
+  maxDrawdownLimit: number;
+  profitTarget: number;
+  trailingDrawdown?: boolean;
+  status?: string;
+  notes?: string;
+}
+
+export interface AccountUpdate {
+  name?: string;
+  firm?: string;
+  accountSize?: number;
+  currentBalance?: number;
+  dailyDrawdownLimit?: number;
+  maxDrawdownLimit?: number;
+  profitTarget?: number;
+  trailingDrawdown?: boolean;
+  status?: string;
+  notes?: string;
+}
+
 export type ListTradesParams = {
 symbol?: string;
 result?: string;
@@ -296,5 +384,9 @@ currency?: string;
 export type ListFinancesParams = {
 type?: string;
 month?: string;
+};
+
+export type GetEquityCurveParams = {
+days?: number;
 };
 

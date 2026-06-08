@@ -594,3 +594,208 @@ export const DeleteFinanceParams = zod.object({
 })
 
 
+/**
+ * @summary Get cumulative P&L equity curve
+ */
+export const GetEquityCurveQueryParams = zod.object({
+  "days": zod.coerce.number().optional()
+})
+
+export const GetEquityCurveResponseItem = zod.object({
+  "date": zod.string(),
+  "cumPnlR": zod.number()
+})
+export const GetEquityCurveResponse = zod.array(GetEquityCurveResponseItem)
+
+
+/**
+ * @summary Get win rate breakdown by session
+ */
+export const GetSessionPerformanceResponseItem = zod.object({
+  "session": zod.string(),
+  "winRate": zod.number(),
+  "trades": zod.number()
+})
+export const GetSessionPerformanceResponse = zod.array(GetSessionPerformanceResponseItem)
+
+
+/**
+ * @summary Get P&L breakdown by pair/symbol
+ */
+export const GetPairPerformanceResponseItem = zod.object({
+  "pair": zod.string(),
+  "pnlR": zod.number(),
+  "trades": zod.number()
+})
+export const GetPairPerformanceResponse = zod.array(GetPairPerformanceResponseItem)
+
+
+/**
+ * @summary List all trading playbooks
+ */
+export const ListPlaybooksResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "rules": zod.string(),
+  "minRR": zod.number().nullish(),
+  "totalTrades": zod.number(),
+  "wins": zod.number(),
+  "losses": zod.number(),
+  "winRate": zod.number().nullish(),
+  "createdAt": zod.coerce.date()
+})
+export const ListPlaybooksResponse = zod.array(ListPlaybooksResponseItem)
+
+
+/**
+ * @summary Create a new playbook
+ */
+export const CreatePlaybookBody = zod.object({
+  "name": zod.string(),
+  "description": zod.string(),
+  "rules": zod.string(),
+  "minRR": zod.number().optional()
+})
+
+
+/**
+ * @summary Update a playbook
+ */
+export const UpdatePlaybookParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdatePlaybookBody = zod.object({
+  "name": zod.string().optional(),
+  "description": zod.string().optional(),
+  "rules": zod.string().optional(),
+  "minRR": zod.number().optional()
+})
+
+export const UpdatePlaybookResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "rules": zod.string(),
+  "minRR": zod.number().nullish(),
+  "totalTrades": zod.number(),
+  "wins": zod.number(),
+  "losses": zod.number(),
+  "winRate": zod.number().nullish(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Delete a playbook
+ */
+export const DeletePlaybookParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
+ * @summary List all prop firm accounts
+ */
+export const ListAccountsResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "firm": zod.string(),
+  "accountSize": zod.number(),
+  "currentBalance": zod.number(),
+  "dailyDrawdownLimit": zod.number(),
+  "maxDrawdownLimit": zod.number(),
+  "profitTarget": zod.number(),
+  "trailingDrawdown": zod.boolean(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})
+export const ListAccountsResponse = zod.array(ListAccountsResponseItem)
+
+
+/**
+ * @summary Create a new prop firm account
+ */
+export const CreateAccountBody = zod.object({
+  "name": zod.string(),
+  "firm": zod.string(),
+  "accountSize": zod.number(),
+  "currentBalance": zod.number(),
+  "dailyDrawdownLimit": zod.number(),
+  "maxDrawdownLimit": zod.number(),
+  "profitTarget": zod.number(),
+  "trailingDrawdown": zod.boolean().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+
+/**
+ * @summary Get a single account
+ */
+export const GetAccountParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetAccountResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "firm": zod.string(),
+  "accountSize": zod.number(),
+  "currentBalance": zod.number(),
+  "dailyDrawdownLimit": zod.number(),
+  "maxDrawdownLimit": zod.number(),
+  "profitTarget": zod.number(),
+  "trailingDrawdown": zod.boolean(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Update an account
+ */
+export const UpdateAccountParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateAccountBody = zod.object({
+  "name": zod.string().optional(),
+  "firm": zod.string().optional(),
+  "accountSize": zod.number().optional(),
+  "currentBalance": zod.number().optional(),
+  "dailyDrawdownLimit": zod.number().optional(),
+  "maxDrawdownLimit": zod.number().optional(),
+  "profitTarget": zod.number().optional(),
+  "trailingDrawdown": zod.boolean().optional(),
+  "status": zod.string().optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateAccountResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "firm": zod.string(),
+  "accountSize": zod.number(),
+  "currentBalance": zod.number(),
+  "dailyDrawdownLimit": zod.number(),
+  "maxDrawdownLimit": zod.number(),
+  "profitTarget": zod.number(),
+  "trailingDrawdown": zod.boolean(),
+  "status": zod.string(),
+  "notes": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Delete an account
+ */
+export const DeleteAccountParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+

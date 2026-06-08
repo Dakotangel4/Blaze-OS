@@ -12,6 +12,8 @@ tags:
     description: Health operations
   - name: trades
     description: Trading journal entries
+  - name: analytics
+    description: Performance analytics
   - name: clients
     description: CRM client management
   - name: notes
@@ -22,6 +24,10 @@ tags:
     description: Finance tracker
   - name: dashboard
     description: Dashboard aggregates
+  - name: playbooks
+    description: Trading setup playbooks
+  - name: accounts
+    description: Prop firm accounts
 
 paths:
   /healthz:
@@ -577,6 +583,218 @@ paths:
         "204":
           description: Deleted
 
+  # ─── ANALYTICS ─────────────────────────────────────────────
+  /trades/equity-curve:
+    get:
+      operationId: getEquityCurve
+      tags: [analytics]
+      summary: Get cumulative P&L equity curve
+      parameters:
+        - in: query
+          name: days
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Equity curve data points
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EquityCurvePoint"
+
+  /trades/session-performance:
+    get:
+      operationId: getSessionPerformance
+      tags: [analytics]
+      summary: Get win rate breakdown by session
+      responses:
+        "200":
+          description: Session performance data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SessionPerformance"
+
+  /trades/pair-performance:
+    get:
+      operationId: getPairPerformance
+      tags: [analytics]
+      summary: Get P&L breakdown by pair/symbol
+      responses:
+        "200":
+          description: Pair performance data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PairPerformance"
+
+  # ─── PLAYBOOKS ──────────────────────────────────────────────
+  /playbooks:
+    get:
+      operationId: listPlaybooks
+      tags: [playbooks]
+      summary: List all trading playbooks
+      responses:
+        "200":
+          description: List of playbooks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Playbook"
+    post:
+      operationId: createPlaybook
+      tags: [playbooks]
+      summary: Create a new playbook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaybookInput"
+      responses:
+        "201":
+          description: Created playbook
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Playbook"
+
+  /playbooks/{id}:
+    patch:
+      operationId: updatePlaybook
+      tags: [playbooks]
+      summary: Update a playbook
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaybookUpdate"
+      responses:
+        "200":
+          description: Updated playbook
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Playbook"
+    delete:
+      operationId: deletePlaybook
+      tags: [playbooks]
+      summary: Delete a playbook
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # ─── ACCOUNTS ───────────────────────────────────────────────
+  /accounts:
+    get:
+      operationId: listAccounts
+      tags: [accounts]
+      summary: List all prop firm accounts
+      responses:
+        "200":
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Account"
+    post:
+      operationId: createAccount
+      tags: [accounts]
+      summary: Create a new prop firm account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountInput"
+      responses:
+        "201":
+          description: Created account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+
+  /accounts/{id}:
+    get:
+      operationId: getAccount
+      tags: [accounts]
+      summary: Get a single account
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateAccount
+      tags: [accounts]
+      summary: Update an account
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountUpdate"
+      responses:
+        "200":
+          description: Updated account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+    delete:
+      operationId: deleteAccount
+      tags: [accounts]
+      summary: Delete an account
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
 components:
   schemas:
     HealthStatus:
@@ -910,3 +1128,107 @@ components:
         category: { type: string }
         total: { type: number }
         type: { type: string }
+
+    # ─── ANALYTICS ─────────────────────────────────────────────
+    EquityCurvePoint:
+      type: object
+      required: [date, cumPnlR]
+      properties:
+        date: { type: string }
+        cumPnlR: { type: number }
+
+    SessionPerformance:
+      type: object
+      required: [session, winRate, trades]
+      properties:
+        session: { type: string }
+        winRate: { type: number }
+        trades: { type: integer }
+
+    PairPerformance:
+      type: object
+      required: [pair, pnlR, trades]
+      properties:
+        pair: { type: string }
+        pnlR: { type: number }
+        trades: { type: integer }
+
+    # ─── PLAYBOOKS ──────────────────────────────────────────────
+    Playbook:
+      type: object
+      required: [id, name, description, rules, totalTrades, wins, losses, createdAt]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string }
+        rules: { type: string }
+        minRR: { type: ["number", "null"] }
+        totalTrades: { type: integer }
+        wins: { type: integer }
+        losses: { type: integer }
+        winRate: { type: ["number", "null"] }
+        createdAt: { type: string, format: date-time }
+
+    PlaybookInput:
+      type: object
+      required: [name, description, rules]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        rules: { type: string }
+        minRR: { type: number }
+
+    PlaybookUpdate:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        rules: { type: string }
+        minRR: { type: number }
+
+    # ─── ACCOUNTS ───────────────────────────────────────────────
+    Account:
+      type: object
+      required: [id, name, firm, accountSize, currentBalance, dailyDrawdownLimit, maxDrawdownLimit, profitTarget, trailingDrawdown, status, createdAt]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        firm: { type: string }
+        accountSize: { type: number }
+        currentBalance: { type: number }
+        dailyDrawdownLimit: { type: number }
+        maxDrawdownLimit: { type: number }
+        profitTarget: { type: number }
+        trailingDrawdown: { type: boolean }
+        status: { type: string }
+        notes: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+
+    AccountInput:
+      type: object
+      required: [name, firm, accountSize, currentBalance, dailyDrawdownLimit, maxDrawdownLimit, profitTarget]
+      properties:
+        name: { type: string }
+        firm: { type: string }
+        accountSize: { type: number }
+        currentBalance: { type: number }
+        dailyDrawdownLimit: { type: number }
+        maxDrawdownLimit: { type: number }
+        profitTarget: { type: number }
+        trailingDrawdown: { type: boolean }
+        status: { type: string }
+        notes: { type: string }
+
+    AccountUpdate:
+      type: object
+      properties:
+        name: { type: string }
+        firm: { type: string }
+        accountSize: { type: number }
+        currentBalance: { type: number }
+        dailyDrawdownLimit: { type: number }
+        maxDrawdownLimit: { type: number }
+        profitTarget: { type: number }
+        trailingDrawdown: { type: boolean }
+        status: { type: string }
+        notes: { type: string }

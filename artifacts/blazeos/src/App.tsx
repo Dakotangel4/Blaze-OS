@@ -17,9 +17,14 @@ const RiskCalculator = lazy(() => import("@/pages/RiskCalculator"));
 const EconomicCalendar = lazy(() => import("@/pages/EconomicCalendar"));
 const Execution = lazy(() => import("@/pages/Execution"));
 const AICenter = lazy(() => import("@/pages/AICenter"));
+const AIValidator = lazy(() => import("@/pages/AIValidator"));
 const KnowledgeVault = lazy(() => import("@/pages/KnowledgeVault"));
 const Analytics = lazy(() => import("@/pages/Analytics"));
+const PerformanceDNA = lazy(() => import("@/pages/PerformanceDNA"));
 const PropFirmTracker = lazy(() => import("@/pages/PropFirmTracker"));
+const Sessions = lazy(() => import("@/pages/Sessions"));
+const Playbooks = lazy(() => import("@/pages/Playbooks"));
+const Psychology = lazy(() => import("@/pages/Psychology"));
 const Settings = lazy(() => import("@/pages/Settings"));
 
 const queryClient = new QueryClient({
@@ -125,8 +130,23 @@ function AppRoutes() {
       <Route path="/analytics">
         <ProtectedRoute component={Analytics} label="Analytics" variant="table" />
       </Route>
+      <Route path="/performance">
+        <ProtectedRoute component={PerformanceDNA} label="Performance DNA" variant="table" />
+      </Route>
       <Route path="/prop-firm">
         <ProtectedRoute component={PropFirmTracker} label="Prop Firm Tracker" variant="table" />
+      </Route>
+      <Route path="/sessions">
+        <ProtectedRoute component={Sessions} label="Sessions" />
+      </Route>
+      <Route path="/playbooks">
+        <ProtectedRoute component={Playbooks} label="Playbooks" />
+      </Route>
+      <Route path="/psychology">
+        <ProtectedRoute component={Psychology} label="Psychology" />
+      </Route>
+      <Route path="/ai-validator">
+        <ProtectedRoute component={AIValidator} label="AI Validator" />
       </Route>
       <Route path="/settings">
         <ProtectedRoute component={Settings} label="Settings" />

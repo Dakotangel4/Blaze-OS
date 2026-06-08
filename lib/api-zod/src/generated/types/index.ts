@@ -6,6 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './account';
+export * from './accountInput';
+export * from './accountUpdate';
 export * from './calendarEvent';
 export * from './calendarEventInput';
 export * from './calendarEventUpdate';
@@ -16,11 +19,13 @@ export * from './clientUpdate';
 export * from './dailyBias';
 export * from './dailyBiasInput';
 export * from './dashboardSummary';
+export * from './equityCurvePoint';
 export * from './finance';
 export * from './financeByCategory';
 export * from './financeInput';
 export * from './financeSummary';
 export * from './financeUpdate';
+export * from './getEquityCurveParams';
 export * from './healthStatus';
 export * from './listCalendarEventsParams';
 export * from './listClientsParams';
@@ -31,7 +36,12 @@ export * from './monthlyFinance';
 export * from './note';
 export * from './noteInput';
 export * from './noteUpdate';
+export * from './pairPerformance';
 export * from './pipelineStage';
+export * from './playbook';
+export * from './playbookInput';
+export * from './playbookUpdate';
+export * from './sessionPerformance';
 export * from './trade';
 export * from './tradeInput';
 export * from './tradeStatBySetup';

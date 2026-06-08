@@ -95,7 +95,7 @@ const MODULES = [
   {
     badge: "TRADE JOURNAL", icon: TrendingUp, color: "text-green-400",
     headline: "Every trade. Every insight. Nothing lost.",
-    desc: "BlazeOS captures your full trade lifecycle — from setup confluence to post-trade review. Built-in stats surface your best sessions, worst habits, and hidden edge automatically.",
+    desc: "BLAZE OS X captures your full trade lifecycle — from setup confluence to post-trade review. Built-in stats surface your best sessions, worst habits, and hidden edge automatically.",
     bullets: [
       "Auto-calculate Win Rate, Avg R:R, and Net P&L",
       "Filter by session, asset, setup type, or date",
@@ -133,7 +133,7 @@ const MODULES = [
 const TESTIMONIALS = [
   {
     initials: "MK",  name: "Marcus K.",  role: "Prop Trader",
-    text: "BlazeOS replaced 4 apps I was paying for separately. The AI Command Center alone is worth the entire subscription — my daily bias reports are now a 90-second exercise.",
+    text: "BLAZE OS X replaced 4 apps I was paying for separately. The AI Command Center alone is worth the entire subscription — my daily bias reports are now a 90-second exercise.",
     stars: 5,
   },
   {
@@ -475,7 +475,7 @@ function Nav() {
           <div className="h-8 w-8 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center">
             <Flame className="h-4 w-4 text-primary" />
           </div>
-          <span className="text-lg font-bold tracking-tight text-white">BlazeOS</span>
+          <span className="text-lg font-bold tracking-tight text-white">BLAZE OS X</span>
         </div>
         <nav className="hidden md:flex items-center gap-8">
           {["Features", "Modules", "Testimonials"].map((item) => (
@@ -743,7 +743,7 @@ function CtaSection() {
             </span>
           </h2>
           <p className="text-white/35 text-lg max-w-lg mx-auto leading-relaxed mb-10">
-            Join thousands of traders who use BlazeOS to stay organized, stay profitable, and stop leaving money on the table.
+            Join thousands of traders who use BLAZE OS X to stay organized, stay profitable, and stop leaving money on the table.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/api/login">
@@ -785,7 +785,7 @@ function Footer() {
           <div className="h-6 w-6 rounded-md bg-primary/15 border border-primary/25 flex items-center justify-center">
             <Flame className="h-3 w-3 text-primary" />
           </div>
-          <span className="text-sm font-bold text-white/40 tracking-tight">BlazeOS</span>
+          <span className="text-sm font-bold text-white/40 tracking-tight">BLAZE OS X</span>
           <span className="text-white/15 text-sm mx-2">—</span>
           <span className="text-xs text-white/20">Your Trading & Business Operating System</span>
         </div>
@@ -794,7 +794,7 @@ function Footer() {
             <a key={l} href="#" className="hover:text-white/40 transition-colors">{l}</a>
           ))}
         </div>
-        <p className="text-xs text-white/15">© {new Date().getFullYear()} BlazeOS. All rights reserved.</p>
+        <p className="text-xs text-white/15">© {new Date().getFullYear()} BLAZE OS X. All rights reserved.</p>
       </div>
     </footer>
   );

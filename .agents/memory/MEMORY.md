@@ -3,3 +3,4 @@
 - [Replit Auth migration](replit-auth-migration.md) — Replaced Supabase Auth with Replit Auth (OIDC/passport); session stored in DB sessions table; users table in lib/db/src/schema/auth.ts.
 - [AI Command Center architecture](ai-command-center.md) — AI keys stored in DB, backend proxies all provider calls; cast AI result via `unknown` before union type to avoid TS2352.
 - [Bundle optimization & lazy routing](bundle-optimization.md) — Rollup manualChunks pattern for pnpm + wouter lazy routes; Supabase client must be guarded against missing env vars.
+- [BLAZE OS X integration](blazeosx-integration.md) — Prop accounts use table `prop_accounts` not `accounts`; new pages (Sessions, Playbooks, Psychology, AIValidator, PerformanceDNA) use direct fetch not generated hooks.

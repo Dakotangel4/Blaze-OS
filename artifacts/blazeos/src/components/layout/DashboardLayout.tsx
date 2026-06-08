@@ -17,6 +17,11 @@ import {
   Shield,
   ChevronDown,
   ChevronRight,
+  Clock,
+  LibraryBig,
+  Brain,
+  Cpu,
+  Activity,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -33,14 +38,17 @@ const NAV_GROUPS: NavGroup[] = [
       { name: "Trading Hub", href: "/trading", icon: TrendingUp },
       { name: "Journal", href: "/journal", icon: NotebookPen },
       { name: "Risk Calculator", href: "/risk", icon: Calculator },
+      { name: "Sessions", href: "/sessions", icon: Clock },
       { name: "Calendar", href: "/calendar", icon: Calendar },
       { name: "Execution", href: "/execution", icon: Zap },
     ],
   },
   {
-    label: "Analysis",
+    label: "Strategy",
     items: [
+      { name: "Playbooks", href: "/playbooks", icon: LibraryBig },
       { name: "AI Center", href: "/ai", icon: Bot },
+      { name: "AI Validator", href: "/ai-validator", icon: Cpu },
       { name: "Knowledge Vault", href: "/knowledge", icon: BookOpen },
     ],
   },
@@ -48,7 +56,9 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Performance",
     items: [
       { name: "Analytics", href: "/analytics", icon: BarChart3 },
-      { name: "Prop Firm Tracker", href: "/prop-firm", icon: Shield },
+      { name: "Performance DNA", href: "/performance", icon: Activity },
+      { name: "Psychology", href: "/psychology", icon: Brain },
+      { name: "Prop Firms", href: "/prop-firm", icon: Shield },
     ],
   },
   {
@@ -132,7 +142,7 @@ function SidebarInner({
           <Flame className="h-4 w-4 text-primary" />
         </div>
         <div>
-          <span className="font-bold text-sm tracking-tight text-white">BlazeOS</span>
+          <span className="font-bold text-sm tracking-tight text-white">BLAZE OS X</span>
           <div className="flex items-center gap-1 mt-0.5">
             <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
             <span className="text-[10px] font-mono text-white/30 tracking-widest">LIVE</span>
@@ -215,7 +225,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-[#0a0a0f]">
           <div className="flex items-center gap-2">
             <Flame className="h-5 w-5 text-primary" />
-            <span className="font-bold text-sm tracking-tight">BlazeOS</span>
+            <span className="font-bold text-sm tracking-tight">BLAZE OS X</span>
           </div>
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
